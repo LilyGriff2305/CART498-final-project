@@ -4,59 +4,1102 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17142a">
-  <title>Afterglow — a visual novel template</title>
+  <title>Outsmarting AI - CART498 final project</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-    :root{color-scheme:dark;--ink:#f7f0ff;--muted:#c2b5d2;--line:#ffffff26;--plum:#29213b;--pink:#f5a4c7;--gold:#f6d79a}
-    *{box-sizing:border-box}body{margin:0;width:100%;height:100vh;height:100dvh;overflow:hidden;background:#171426;color:var(--ink);font:15px 'DM Sans',sans-serif}
-    button,input,textarea{font:inherit;color:inherit}.game{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;background:#211b31}
-    .topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#1d182a;border-bottom:1px solid var(--line)}.brand{display:flex;gap:11px;align-items:center;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}.brand-mark{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f8c4d4,#b58acb);color:#382740;font-size:16px}.top-actions{display:flex;gap:9px}.icon-btn{background:transparent;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);cursor:pointer}.icon-btn:hover{color:white;border-color:#ffffff70}
-    .scene{flex:1;min-height:0;position:relative;overflow:hidden;background:linear-gradient(180deg,#393452 0%,#74546d 46%,#d48a89 78%,#f0b89a 100%)}.sky-glow{position:absolute;inset:35% 0 0;background:linear-gradient(0deg,#eeb08f88,transparent)}.moon{position:absolute;width:76px;height:76px;border-radius:50%;right:17%;top:12%;background:#ffe3c0;box-shadow:0 0 40px #ffe3c088,0 0 110px #ffd9b677}.stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 11% 19%,#fff 50%,transparent),radial-gradient(1px 1px at 25% 12%,#fff 50%,transparent),radial-gradient(2px 2px at 65% 16%,#fff 50%,transparent),radial-gradient(1px 1px at 80% 31%,#fff 50%,transparent),radial-gradient(1px 1px at 43% 29%,#fff 50%,transparent),radial-gradient(2px 2px at 91% 12%,#fff 50%,transparent);opacity:.8}
-    .hill{position:absolute;bottom:-40px;width:120%;height:170px;left:-10%;border-radius:50% 50% 0 0;background:#463451}.hill.back{bottom:18px;left:25%;height:115px;background:#62435c;transform:rotate(-5deg)}.city{position:absolute;bottom:68px;left:0;right:0;height:110px;opacity:.75;background:linear-gradient(90deg,transparent 1%,#49344f 1% 6%,transparent 6% 8%,#503853 8% 15%,transparent 15% 18%,#48354e 18% 23%,transparent 23% 28%,#49344f 28% 36%,transparent 36% 40%,#4d3752 40% 48%,transparent 48% 52%,#46334b 52% 61%,transparent 61% 65%,#523957 65% 74%,transparent 74% 79%,#47334e 79% 87%,transparent 87% 92%,#503752 92% 97%,transparent 97%);clip-path:polygon(0 35%,5% 35%,5% 13%,10% 13%,10% 45%,17% 45%,17% 4%,25% 4%,25% 28%,32% 28%,32% 0,40% 0,40% 40%,48% 40%,48% 17%,56% 17%,56% 35%,64% 35%,64% 5%,72% 5%,72% 40%,80% 40%,80% 19%,87% 19%,87% 0,94% 0,94% 36%,100% 36%,100% 100%,0 100%)}
-    .window{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center}.character{width:min(355px,40vw);height:360px;position:relative;filter:drop-shadow(0 16px 30px #25182d66);transition:transform .35s}.character svg{width:100%;height:100%}.character.speaking{transform:translateY(-5px)}.scene-label{position:absolute;top:22px;left:24px;padding:8px 12px;border:1px solid #ffffff35;border-radius:99px;background:#211b3166;backdrop-filter:blur(8px);font-size:12px;color:#fff}
-    .lower{padding:0 22px 20px}.dialogue{position:relative;margin-top:-37px;z-index:2;min-height:120px;padding:21px 24px 19px;border:1px solid #ffffff35;border-radius:16px;background:linear-gradient(135deg,#332940f5,#251f35f7);box-shadow:0 14px 40px #130f20a8}.speaker{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}.line{font-family:'Playfair Display',serif;font-size:18px;line-height:1.55;color:#fff;min-height:54px}.caret{display:inline-block;width:2px;height:18px;background:var(--pink);vertical-align:middle;margin-left:3px;animation:blink 1s steps(2) infinite}@keyframes blink{50%{opacity:0}}
-    .composer{display:flex;align-items:flex-end;gap:12px;margin-top:15px}.input-wrap{flex:1;position:relative}.input-wrap textarea{display:block;width:100%;resize:vertical;min-height:56px;max-height:120px;padding:16px 17px;border-radius:13px;border:1px solid var(--line);background:#171426;color:#fff;outline:none}.input-wrap textarea:focus{border-color:#eaa6c8;box-shadow:0 0 0 3px #eaa6c822}.input-wrap textarea::placeholder{color:#897e98}.send{height:54px;padding:0 22px;border:0;border-radius:13px;color:#382840;background:linear-gradient(135deg,#ffd3da,#f1a3c4);font-weight:700;cursor:pointer;transition:transform .15s,filter .15s}.send:hover{transform:translateY(-2px);filter:brightness(1.05)}.send:disabled{opacity:.48;cursor:wait;transform:none}.hint{font-size:11px;color:#92879f;margin:9px 2px 0}.status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}.dot{width:7px;height:7px;border-radius:50%;background:#90d9b3}.dot.loading{background:#f5d27b;animation:blink .8s infinite}.dot.error{background:#f08c9d}.footer{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 0}.toast{font-size:11px;color:#f6c4d0;min-height:15px}.settings{display:none;position:fixed;inset:0;z-index:9;background:#0d0b14bb;place-items:center;padding:20px}.settings.open{display:grid}.panel{width:min(480px,100%);padding:24px;border:1px solid #ffffff2c;border-radius:18px;background:#241e34;box-shadow:0 20px 70px #0009}.panel h2{font:600 25px 'Playfair Display',serif;margin:0 0 6px}.panel p{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 19px}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:12px;color:#d9ccdf}.field input,.field textarea{border:1px solid var(--line);border-radius:10px;background:#171426;padding:11px 12px;outline:none}.field textarea{min-height:104px;resize:vertical;line-height:1.45}.panel-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:19px}.primary,.secondary{padding:10px 14px;border-radius:10px;border:1px solid var(--line);cursor:pointer}.primary{background:#efacc6;color:#34233d;border:0;font-weight:700}.secondary{background:transparent;color:var(--muted)}.note{font-size:11px!important;margin-top:12px!important}.loadingbar{height:2px;background:transparent;position:absolute;bottom:0;left:0;right:0}.loadingbar.active{background:linear-gradient(90deg,transparent,#f6b0cd,transparent);background-size:200% 100%;animation:load 1.3s linear infinite}@keyframes load{to{background-position:-200% 0}}
-    .menu-screen,.loading-screen{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 35%,#57415eaa,transparent 55%),linear-gradient(180deg,#211c32f5,#171426fa)}.menu-card,.loading-card{width:min(520px,100%);padding:clamp(24px,5vw,44px);border:1px solid #ffffff30;border-radius:24px;background:#211b31eF;box-shadow:0 28px 90px #090711aa;backdrop-filter:blur(18px)}.menu-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--pink);font-weight:700}.menu-title{font:600 clamp(42px,9vw,66px)/1.05 'Playfair Display',serif;margin:12px 0 8px}.menu-copy{color:var(--muted);line-height:1.65;margin:0 0 27px}.model-select{width:100%;padding:14px;border:1px solid #ffffff30;border-radius:12px;background:#171426;color:#fff;outline:none}.model-help{font-size:11px;color:#a99bb7;line-height:1.5;margin:9px 0 22px}.menu-start{width:100%;min-height:52px;font-size:14px}.menu-error{color:#ffb5c1;font-size:12px;min-height:18px;margin-top:12px}.menu-screen[hidden],.loading-screen[hidden]{display:none}.loading-card{text-align:center}.loading-icon{width:54px;height:54px;border:1px solid #ffffff30;border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;color:var(--gold);font-size:24px}.loading-title{font:600 29px 'Playfair Display',serif;margin:0 0 9px}.loading-copy{font-size:13px;line-height:1.6;color:var(--muted);min-height:42px}.progress-track{height:9px;overflow:hidden;border-radius:99px;background:#100e1a;border:1px solid #ffffff1e;margin:22px 0 10px}.progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#c78dad,#ffc3d2);transition:width .25s ease}.progress-meta{display:flex;justify-content:space-between;color:#ded3e8;font-size:12px;font-variant-numeric:tabular-nums}.loading-detail{font-size:10px;color:#94899f;margin-top:15px;min-height:15px;overflow-wrap:anywhere}.loading-back{margin-top:20px}
-    .range-label{display:flex;align-items:center;justify-content:space-between;gap:12px}.range-value{color:var(--pink);font-variant-numeric:tabular-nums;font-weight:700}.field input[type=range]{width:100%;padding:0;border:0;background:transparent;accent-color:#f1a3c4;cursor:pointer}.setting-hint{font-size:11px!important;color:#a99bb7!important;margin:4px 0 0!important}
-    .menu-screen{display:block;overflow:hidden;padding:0;background:linear-gradient(180deg,#201c33 0%,#554057 56%,#d38e91 100%)}.menu-screen:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 76% 25%,#ffe4c9 0 38px,transparent 40px),radial-gradient(ellipse at 74% 33%,#ffdbb344,transparent 30%),radial-gradient(1.5px 1.5px at 12% 17%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 36% 11%,#fff 50%,transparent),radial-gradient(2px 2px at 57% 21%,#fff 50%,transparent),radial-gradient(1px 1px at 91% 14%,#fff 50%,transparent),radial-gradient(1px 1px at 83% 39%,#fff 50%,transparent);opacity:.9}.menu-screen:after{content:"";position:absolute;left:-5%;right:-5%;bottom:-38px;height:39%;background:linear-gradient(180deg,#48334f,#382b47);clip-path:polygon(0 38%,6% 38%,6% 20%,12% 20%,12% 48%,18% 48%,18% 12%,25% 12%,25% 39%,33% 39%,33% 0,42% 0,42% 44%,50% 44%,50% 20%,57% 20%,57% 42%,66% 42%,66% 8%,73% 8%,73% 39%,82% 39%,82% 18%,89% 18%,89% 0,96% 0,96% 38%,100% 38%,100% 100%,0 100%);opacity:.75}.menu-frame{position:relative;z-index:1;min-height:100%;display:flex;flex-direction:column;padding:clamp(20px,4vw,48px) clamp(22px,6vw,84px) 25px}.menu-topline{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:#f0d8e8}.menu-topline span:last-child{color:#cfb8ce}.menu-layout{flex:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);align-items:center;gap:clamp(24px,7vw,100px);max-width:1200px;width:100%;margin:0 auto;padding:35px 0 75px}.menu-hero{padding-bottom:20px}.menu-kicker{display:flex;align-items:center;gap:11px;font-size:11px;text-transform:uppercase;letter-spacing:.28em;color:#ffd2dc;font-weight:700}.menu-kicker:before{content:"";width:30px;height:1px;background:var(--pink)}.menu-title{font:600 clamp(58px,10vw,120px)/.92 'Playfair Display',serif;letter-spacing:-.045em;margin:20px 0 18px;text-shadow:0 8px 40px #20132899}.menu-subtitle{font:500 clamp(16px,2vw,22px) 'Playfair Display',serif;color:#f4d9df;margin:0 0 14px}.menu-copy{max-width:440px;color:#e0cedc;line-height:1.7;margin:0}.menu-card{width:100%;max-width:440px;padding:26px;border-radius:16px;background:linear-gradient(145deg,#221c32ed,#211b31e8);border-color:#ffffff3d;box-shadow:0 22px 70px #100c1f88}.menu-card .field{margin:0}.model-select{padding:15px 13px;background:#171426;border-color:#ffffff35}.model-select:focus{border-color:#f5a4c7}.menu-start{margin-top:7px;letter-spacing:.04em;text-transform:uppercase}.menu-start:before{content:"▶";font-size:11px;margin-right:10px}.menu-error{margin-top:10px}.menu-foot{display:flex;justify-content:space-between;gap:18px;color:#e0cbdb;font-size:10px;letter-spacing:.08em;text-transform:uppercase}.menu-foot span:last-child{color:#c6b3ca}.menu-divider{height:1px;background:#ffffff26;margin:20px 0 15px}.menu-actions{display:grid;gap:12px}.menu-choice{width:100%;min-height:54px;border-radius:10px;padding:0 17px;text-align:left;display:flex;align-items:center;justify-content:space-between;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.menu-choice span:last-child{font-size:11px;opacity:.75}.menu-choice.resume{background:#ffffff0a;color:#f2ddea;border:1px solid #ffffff35}.menu-choice.resume:hover:not(:disabled){background:#ffffff16}.menu-choice:disabled{opacity:.38;filter:grayscale(1);cursor:not-allowed}.menu-model-back{margin-top:14px}
-    @media(max-width:640px){.topbar{height:58px;min-height:58px;padding:0 15px}.scene{height:auto;min-height:0;max-height:none}.character{height:290px;width:275px}.moon{right:14%;width:60px;height:60px}.lower{flex:none;padding:0 13px 16px}.dialogue{margin-top:-30px;padding:17px 17px 15px}.line{font-size:16px;min-height:64px}.composer{gap:8px}.send{padding:0 15px}.footer{gap:8px}.hint{font-size:10px}.top-actions .icon-btn{padding:7px 9px}}
-    @media(max-width:700px){.menu-frame{padding:21px 22px 17px}.menu-layout{grid-template-columns:1fr;align-content:center;gap:24px;padding:34px 0 48px}.menu-hero{padding-bottom:0}.menu-title{font-size:clamp(60px,16vw,88px);margin:14px 0 12px}.menu-copy{font-size:13px}.menu-card{max-width:none;padding:21px}.menu-foot{font-size:9px}.menu-topline{font-size:9px}}
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap');
+  :root {
+    color-scheme:dark;
+    --ink:#f7f0ff;
+    --muted:#c2b5d2;
+    --line:#ffffff26;
+    --plum:#29213b;
+    --pink:#f5a4c7;
+    --gold:#f6d79a
+  }
+  * {
+    box-sizing:border-box
+  }
+  body {
+    margin:0;
+    width:100%;
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+    background:#171426;
+    color:var(--ink);
+    font:15px 'DM Sans',sans-serif
+  }
+  button,input,textarea {
+    font:inherit;
+    color:inherit
+  }
+  .game {
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    background:#211b31
+  }
+  .topbar {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    z-index:5;
+    height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    background:transparent;
+    border-bottom:0
+  }
+  .brand {
+    display:flex;
+    gap:11px;
+    align-items:center;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-size:12px
+  }
+  .brand-mark {
+    width:29px;
+    height:29px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(145deg,#f8c4d4,#b58acb);
+    color:#382740;
+    font-size:16px
+  }
+  .top-actions {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    position:relative;
+    margin-left:auto
+  }
+  .main-menu-quick {
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    padding:0;
+  }
+  .main-menu-quick svg {
+    display:block;
+    width:26px;
+    height:26px
+  }
+  .menu-toggle {
+    width:42px;
+    height:42px;
+    display:grid;
+    place-content:center;
+    gap:5px
+  }
+  .hamburger-icon,
+  .hamburger-icon::before,
+  .hamburger-icon::after {
+    display:block;
+    width:17px;
+    height:2px;
+    border-radius:2px;
+    background:currentColor
+  }
+  .hamburger-icon {
+    position:relative
+  }
+  .hamburger-icon::before,
+  .hamburger-icon::after {
+    content:"";
+    position:absolute;
+    left:0
+  }
+  .hamburger-icon::before {
+    top:-6px
+  }
+  .hamburger-icon::after {
+    top:6px
+  }
+  .action-menu {
+    position:absolute;
+    top:calc(100% + 9px);
+    right:0;
+    z-index:30;
+    display:grid;
+    gap:6px;
+    width:min(220px,calc(100vw - 32px));
+    max-height:calc(100dvh - 88px);
+    overflow-y:auto;
+    padding:8px;
+    border:1px solid #ffffff30;
+    border-radius:12px;
+    background:#211b31f5;
+    box-shadow:0 16px 40px #090711aa;
+    backdrop-filter:blur(14px)
+  }
+  .action-menu[hidden] {
+    display:none
+  }
+  .action-menu .icon-btn {
+    width:100%;
+    text-align:left
+  }
+  .icon-btn {
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:8px 12px;
+    color:var(--muted);
+    cursor:pointer
+  }
+  .icon-btn:hover {
+    color:white;
+    border-color:#ffffff70
+  }
+  .top-actions .main-menu-quick {
+    padding:0
+  }
+  .scene {
+    flex:1;
+    min-height:0;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:-110px;
+    background:#171426 url("img-assets/Vesper%20A-1%20Airlock%20in%20Orbit.png") center 54% / cover no-repeat
+  }
+  .window {
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center
+  }
+  .character {
+    width:min(900px,78vw);
+    height:min(600px,75vh);
+    position:relative;
+    mix-blend-mode:screen;
+    opacity:.88;
+    transition:transform .35s
+  }
+  .character img {
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center bottom
+  }
+  .character.speaking {
+    animation:speakBounce .42s ease-out
+  }
+  @keyframes speakBounce {
+    0%,100% {
+      transform:translateY(0)
+    }
+    35% {
+      transform:translateY(-8px)
+    }
+    72% {
+      transform:translateY(0)
+    }
+    86% {
+      transform:translateY(-2px)
+    }
+  }
+  .scene-label {
+    position:absolute;
+    top:22px;
+    left:24px;
+    padding:8px 12px;
+    border:1px solid #ffffff35;
+    border-radius:99px;
+    background:#211b3166;
+    backdrop-filter:blur(8px);
+    font-size:12px;
+    color:#fff
+  }
+  .lower {
+    padding:0 22px 20px
+  }
+  .dialogue {
+    position:relative;
+    margin-top:-37px;
+    margin-left:50px;
+    margin-right:50px;
+    z-index:2;
+    min-height:120px;
+    padding:21px 24px 19px;
+    border:1px solid #ffffff35;
+    border-radius:16px;
+    background:linear-gradient(135deg,#332940f5,#251f35f7);
+    box-shadow:0 14px 40px #130f20a8
+  }
+  .speaker {
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--pink);
+    margin-bottom:8px
+  }
+  .line {
+    font-family:'Playfair Display',serif;
+    font-size:18px;
+    line-height:1.55;
+    color:#fff;
+    min-height:54px
+  }
+  .caret {
+    display:inline-block;
+    width:2px;
+    height:18px;
+    background:var(--pink);
+    vertical-align:middle;
+    margin-left:3px;
+    animation:blink 1s steps(2) infinite
+  }
+  @keyframes blink {
+    50% {
+      opacity:0
+    }
+  }
+  .composer {
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    margin:15px 50px 0
+  }
+  .input-wrap {
+    flex:1;
+    position:relative
+  }
+  .input-wrap textarea {
+    display:block;
+    width:100%;
+    resize:vertical;
+    min-height:56px;
+    max-height:120px;
+    padding:16px 17px;
+    border-radius:13px;
+    border:1px solid var(--line);
+    background:#171426;
+    color:#fff;
+    outline:none
+  }
+  .input-wrap textarea:focus {
+    border-color:#eaa6c8;
+    box-shadow:0 0 0 3px #eaa6c822
+  }
+  .input-wrap textarea::placeholder {
+    color:#897e98
+  }
+  .send {
+    height:54px;
+    padding:0 22px;
+    border:0;
+    border-radius:13px;
+    color:#382840;
+    background:linear-gradient(135deg,#ffd3da,#f1a3c4);
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .15s,filter .15s
+  }
+  .send:hover {
+    transform:translateY(-2px);
+    filter:brightness(1.05)
+  }
+  .send:disabled {
+    opacity:.48;
+    cursor:wait;
+    transform:none
+  }
+  .hint {
+    font-size:11px;
+    color:#92879f;
+    margin:9px 24px 0
+  }
+  .status {
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:11px;
+    color:var(--muted)
+  }
+  .dot {
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#90d9b3
+  }
+  .dot.loading {
+    background:#f5d27b;
+    animation:blink .8s infinite
+  }
+  .dot.error {
+    background:#f08c9d
+  }
+  .footer {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 2px 0
+  }
+  .toast {
+    font-size:11px;
+    color:#f6c4d0;
+    min-height:15px
+  }
+  .settings {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:30;
+    background:#0d0b14bb;
+    place-items:center;
+    padding:20px
+  }
+  .settings.open {
+    display:grid
+  }
+  .story-background-overlay {
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:grid;
+    place-items:center;
+    padding:18px;
+    background:#020812c9;
+    backdrop-filter:blur(8px)
+  }
+  .story-background-overlay[hidden] {
+    display:none
+  }
+  .story-tablet {
+    position:relative;
+    width:min(680px,100%);
+    max-height:calc(100dvh - 36px);
+    overflow:auto;
+    padding:clamp(26px,5vw,48px);
+    border:1px solid #68f2ff99;
+    border-radius:16px;
+    color:#e9fbff;
+    background:linear-gradient(145deg,#0b1e2df7,#07111ff7);
+    box-shadow:inset 0 0 0 5px #42dbff12,0 0 0 1px #20d8ff55,0 0 60px #00cfff44,0 24px 80px #000b;
+    backdrop-filter:blur(18px)
+  }
+  .story-tablet::before {
+    content:"";
+    position:absolute;
+    inset:9px;
+    border:1px solid #55eaff28;
+    border-radius:10px;
+    pointer-events:none
+  }
+  .tablet-topline,
+  .tablet-actions {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px
+  }
+  .tablet-topline {
+    color:#8eefff;
+    font-size:10px;
+    letter-spacing:.2em;
+    text-transform:uppercase
+  }
+  .tablet-close {
+    width:34px;
+    height:34px;
+    border:1px solid #73eaff66;
+    border-radius:8px;
+    color:#b8f8ff;
+    background:#27d9ff12;
+    font-size:22px;
+    cursor:pointer
+  }
+  .tablet-close svg {
+    display:block;
+    width:16px;
+    height:16px;
+    margin:auto
+  }
+  .tablet-kicker {
+    margin:22px 0 8px;
+    color:#55eaff;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.24em;
+    text-transform:uppercase
+  }
+  .tablet-title {
+    margin:0 0 18px;
+    color:#f0fdff;
+    font:600 clamp(25px,5vw,38px)/1.15 'Orbitron',sans-serif;
+    text-shadow:0 0 22px #36ddff66
+  }
+  .tablet-copy {
+    margin:0 0 18px;
+    color:#cee6ef;
+    font-size:17px;
+    line-height:1.7
+  }
+  .tablet-actions {
+    justify-content:flex-end;
+    margin-top:26px
+  }
+  .tablet-return {
+    min-height:42px;
+    padding:0 18px;
+    border:1px solid #61edff88;
+    border-radius:8px;
+    color:#05121b;
+    background:linear-gradient(135deg,#9cffff,#30d9f2);
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+    box-shadow:0 0 22px #1cdcff55
+  }
+  .panel {
+    width:min(480px,100%);
+    padding:24px;
+    border:1px solid #ffffff2c;
+    border-radius:18px;
+    background:#241e34;
+    box-shadow:0 20px 70px #0009
+  }
+  .panel h2 {
+    font:600 25px 'Playfair Display',serif;
+    margin:0 0 6px
+  }
+  .panel p {
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.5;
+    margin:0 0 19px
+  }
+  .field {
+    display:grid;
+    gap:7px;
+    margin:13px 0
+  }
+  .field label {
+    font-size:12px;
+    color:#d9ccdf
+  }
+  .field input,.field textarea {
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#171426;
+    padding:11px 12px;
+    outline:none
+  }
+  .field textarea {
+    min-height:104px;
+    resize:vertical;
+    line-height:1.45
+  }
+  .panel-actions {
+    display:flex;
+    justify-content:flex-end;
+    gap:9px;
+    margin-top:19px
+  }
+  .primary,.secondary {
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    cursor:pointer
+  }
+  .primary {
+    background:#efacc6;
+    color:#34233d;
+    border:0;
+    font-weight:700
+  }
+  .secondary {
+    background:transparent;
+    color:var(--muted)
+  }
+  .note {
+    font-size:11px!important;
+    margin-top:12px!important
+  }
+  .loadingbar {
+    height:2px;
+    background:transparent;
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0
+  }
+  .loadingbar.active {
+    background:linear-gradient(90deg,transparent,#f6b0cd,transparent);
+    background-size:200% 100%;
+    animation:load 1.3s linear infinite
+  }
+  @keyframes load {
+    to {
+      background-position:-200% 0
+    }
+  }
+  .menu-screen,.loading-screen {
+    position:fixed;
+    inset:0;
+    z-index:20;
+    display:grid;
+    place-items:center;
+    padding:24px;
+    background:radial-gradient(ellipse at 50% 35%,#57415eaa,transparent 55%),linear-gradient(180deg,#211c32f5,#171426fa)
+  }
+  .menu-card,.loading-card {
+    width:min(520px,100%);
+    padding:clamp(24px,5vw,44px);
+    border:1px solid #ffffff30;
+    border-radius:24px;
+    background:#211b31eF;
+    box-shadow:0 28px 90px #090711aa;
+    backdrop-filter:blur(18px)
+  }
+  .menu-kicker {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.2em;
+    color:var(--pink);
+    font-weight:700
+  }
+  .menu-title {
+    font:600 clamp(42px,9vw,66px)/1.05 'Orbitron',sans-serif;
+    margin:12px 0 8px
+  }
+  .menu-copy {
+    color:var(--muted);
+    line-height:1.65;
+    margin:0 0 27px
+  }
+  .model-select {
+    width:100%;
+    padding:14px;
+    border:1px solid #ffffff30;
+    border-radius:12px;
+    background:#171426;
+    color:#fff;
+    outline:none
+  }
+  .model-help {
+    font-size:11px;
+    color:#a99bb7;
+    line-height:1.5;
+    margin:9px 0 22px
+  }
+  .menu-start {
+    width:100%;
+    min-height:52px;
+    font-size:14px
+  }
+  .menu-error {
+    color:#ffb5c1;
+    font-size:12px;
+    min-height:18px;
+    margin-top:12px
+  }
+  .menu-screen[hidden],.loading-screen[hidden] {
+    display:none
+  }
+  .loading-card {
+    text-align:center
+  }
+  .loading-icon {
+    width:54px;
+    height:54px;
+    border:1px solid #ffffff30;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    margin:0 auto 20px;
+    color:var(--gold);
+    font-size:24px
+  }
+  .loading-title {
+    font:600 29px 'Playfair Display',serif;
+    margin:0 0 9px
+  }
+  .loading-copy {
+    font-size:13px;
+    line-height:1.6;
+    color:var(--muted);
+    min-height:42px
+  }
+  .progress-track {
+    height:9px;
+    overflow:hidden;
+    border-radius:99px;
+    background:#100e1a;
+    border:1px solid #ffffff1e;
+    margin:22px 0 10px
+  }
+  .progress-fill {
+    height:100%;
+    width:0%;
+    border-radius:99px;
+    background:linear-gradient(90deg,#c78dad,#ffc3d2);
+    transition:width .25s ease
+  }
+  .progress-meta {
+    display:flex;
+    justify-content:space-between;
+    color:#ded3e8;
+    font-size:12px;
+    font-variant-numeric:tabular-nums
+  }
+  .loading-detail {
+    font-size:10px;
+    color:#94899f;
+    margin-top:15px;
+    min-height:15px;
+    overflow-wrap:anywhere
+  }
+  .loading-back {
+    margin-top:20px
+  }
+  .range-label {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px
+  }
+  .range-value {
+    color:var(--pink);
+    font-variant-numeric:tabular-nums;
+    font-weight:700
+  }
+  .field input[type=range] {
+    width:100%;
+    padding:0;
+    border:0;
+    background:transparent;
+    accent-color:#f1a3c4;
+    cursor:pointer
+  }
+  .setting-hint {
+    font-size:11px!important;
+    color:#a99bb7!important;
+    margin:4px 0 0!important
+  }
+  .menu-screen {
+    display:block;
+    overflow:hidden;
+    padding:0;
+    background:linear-gradient(180deg,#17142655,#17142666),url("img-assets/Vesper%20Airlock%20Above%20Earth.png") center / cover no-repeat
+  }
+  .menu-screen::before,
+  .menu-screen::after {
+    display:none
+  }
+  .menu-screen:before {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 76% 25%,#ffe4c9 0 38px,transparent 40px),radial-gradient(ellipse at 74% 33%,#ffdbb344,transparent 30%),radial-gradient(1.5px 1.5px at 12% 17%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 36% 11%,#fff 50%,transparent),radial-gradient(2px 2px at 57% 21%,#fff 50%,transparent),radial-gradient(1px 1px at 91% 14%,#fff 50%,transparent),radial-gradient(1px 1px at 83% 39%,#fff 50%,transparent);
+    opacity:.9
+  }
+  .menu-screen:after {
+    content:"";
+    position:absolute;
+    left:-5%;
+    right:-5%;
+    bottom:-38px;
+    height:39%;
+    background:linear-gradient(180deg,#48334f,#382b47);
+    clip-path:polygon(0 38%,6% 38%,6% 20%,12% 20%,12% 48%,18% 48%,18% 12%,25% 12%,25% 39%,33% 39%,33% 0,42% 0,42% 44%,50% 44%,50% 20%,57% 20%,57% 42%,66% 42%,66% 8%,73% 8%,73% 39%,82% 39%,82% 18%,89% 18%,89% 0,96% 0,96% 38%,100% 38%,100% 100%,0 100%);
+    opacity:.75
+  }
+  .menu-frame {
+    position:relative;
+    z-index:1;
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    padding:clamp(20px,4vw,48px) 50vw 25px clamp(22px,6vw,84px)
+  }
+  .menu-topline {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:11px;
+    letter-spacing:.17em;
+    text-transform:uppercase;
+    color:#f0d8e8
+  }
+  .menu-topline span:last-child {
+    color:#cfb8ce
+  }
+  .menu-layout {
+    flex:1;
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    align-items:center;
+    gap:clamp(24px,7vw,100px);
+    max-width:1200px;
+    width:100%;
+    margin:0 auto;
+    padding:35px 0 75px
+  }
+  .menu-hero {
+    align-self:start;
+    padding-top:clamp(16px,4vh,40px);
+    padding-bottom:20px
+  }
+  .menu-kicker {
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.28em;
+    color:#ffd2dc;
+    font-weight:700
+  }
+  .menu-kicker:before {
+    content:"";
+    width:30px;
+    height:1px;
+    background:var(--pink)
+  }
+  .menu-title {
+    font:600 clamp(58px,10vw,120px)/.92 'Orbitron',sans-serif;
+    letter-spacing:-.045em;
+    margin:20px 0 18px;
+    text-shadow:0 8px 40px #20132899
+  }
+  .menu-subtitle {
+    font:500 clamp(16px,2vw,22px) 'Playfair Display',serif;
+    color:#f4d9df;
+    margin:0 0 14px
+  }
+  .menu-copy {
+    max-width:440px;
+    color:#e0cedc;
+    line-height:1.7;
+    margin:0
+  }
+  .menu-card {
+    width:100%;
+    max-width:440px;
+    margin-top:26px;
+    padding:48px 0 0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+    backdrop-filter:none
+  }
+  .menu-card .field {
+    margin:0
+  }
+  .model-select {
+    padding:15px 13px;
+    background:#171426;
+    border-color:#ffffff35
+  }
+  .model-select:focus {
+    border-color:#f5a4c7
+  }
+  .menu-start {
+    margin-top:7px;
+    letter-spacing:.04em;
+    text-transform:uppercase
+  }
+  .menu-start:before {
+    content:"▶";
+    font-size:11px;
+    margin-right:10px
+  }
+  .menu-error {
+    margin-top:10px
+  }
+  .menu-foot {
+    display:flex;
+    position:fixed;
+    right:clamp(22px,6vw,84px);
+    bottom:clamp(16px,3vh,30px);
+    z-index:25;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:5px;
+    color:#e0cbdb;
+    font-size:10px;
+    letter-spacing:.08em;
+    text-align:right;
+    text-transform:uppercase
+  }
+  .menu-foot span:last-child {
+    color:#c6b3ca
+  }
+  .menu-divider {
+    height:1px;
+    background:#ffffff26;
+    margin:20px 0 15px
+  }
+  .menu-actions {
+    display:grid;
+    gap:24px
+  }
+  .menu-choice {
+    width:100%;
+    min-height:54px;
+    border-radius:10px;
+    padding:0 17px;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    backdrop-filter:blur(12px)
+  }
+  .menu-choice span:last-child {
+    font-size:11px;
+    opacity:.75
+  }
+  .menu-choice.resume {
+    background:#ffffff0a;
+    color:#f2ddea;
+    border:1px solid #ffffff35
+  }
+  .menu-choice.resume:hover:not(:disabled) {
+    background:#ffffff16
+  }
+  .menu-choice.settings-choice {
+    background:#ffffff08;
+    color:#f2ddea;
+    border:1px solid #ffffff25
+  }
+  .menu-choice.settings-choice:hover {
+    background:#ffffff16
+  }
+  .menu-choice:disabled {
+    opacity:.38;
+    filter:grayscale(1);
+    cursor:not-allowed
+  }
+  .menu-model-back {
+    margin-top:14px
+  }
+  @media(max-width:640px) {
+    .topbar {
+      height:58px;
+      min-height:58px;
+      padding:0 15px
+    }
+    .scene {
+      height:auto;
+      min-height:0;
+      max-height:none
+    }
+    .character {
+      height:min(420px,60vh);
+      width:min(110vw,540px)
+    }
+    /* .moon {
+      right:14%;
+      width:60px;
+      height:60px
+    } */
+    .lower {
+      flex:none;
+      padding:0 13px 16px
+    }
+    .dialogue {
+      margin-top:-30px;
+      margin-left:30px;
+      margin-right:30px;
+      padding:17px 17px 15px
+    }
+    .line {
+      font-size:16px;
+      min-height:64px
+    }
+    .composer {
+      gap:8px;
+      margin-left:30px;
+      margin-right:30px
+    }
+    .send {
+      padding:0 15px
+    }
+    .footer {
+      gap:8px
+    }
+    .hint {
+      font-size:10px;
+      margin-left:14px;
+      margin-right:14px
+    }
+    .top-actions .icon-btn {
+      padding:7px 9px
+    }
+  }
+  @media(max-width:700px) {
+    .menu-frame {
+      padding:21px 22px 17px
+    }
+    .menu-layout {
+      grid-template-columns:1fr;
+      align-content:start;
+      gap:24px;
+      padding:clamp(36px,7vh,58px) 0 48px
+    }
+    .menu-hero {
+      padding-top:0;
+      padding-bottom:0
+    }
+    .menu-title {
+      font-size:clamp(60px,16vw,88px);
+      margin:14px 0 12px
+    }
+    .menu-copy {
+      font-size:13px
+    }
+    .menu-card {
+      max-width:none;
+      padding:36px 0 0
+    }
+    .menu-foot {
+      font-size:9px
+    }
+    .menu-topline {
+      font-size:9px
+    }
+  }
   </style>
 </head>
 <body>
   <main class="game" aria-label="Afterglow visual novel">
-    <header class="topbar"><div class="brand"><span class="brand-mark">✦</span><span>Afterglow</span></div><div class="top-actions"><button class="icon-btn" id="mainMenuBtn">⌂ <span class="desktop">Main Menu</span></button><button class="icon-btn" id="restartBtn" title="Restart conversation">↺ <span class="desktop">Restart</span></button><button class="icon-btn" id="settingsBtn">⚙ <span class="desktop">Settings</span></button></div></header>
-    <section class="scene" aria-label="Nighttime city scene"><div class="stars"></div><div class="moon"></div><div class="sky-glow"></div><div class="city"></div><div class="hill back"></div><div class="hill"></div><div class="scene-label">✦ &nbsp;Chapter 01 · The last train</div>
-      <div class="window"><div class="character" id="character" aria-label="Character portrait">
-        <svg viewBox="0 0 360 390" role="img" aria-label="Illustration of a girl with dark hair and a rose-colored scarf">
-          <defs><linearGradient id="coat" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d98ca9"/><stop offset="1" stop-color="#765071"/></linearGradient><linearGradient id="hair" x1="0" x2="1"><stop stop-color="#28263d"/><stop offset="1" stop-color="#49324c"/></linearGradient></defs>
-          <ellipse cx="180" cy="383" rx="132" ry="20" fill="#30233c" opacity=".28"/><path d="M76 389c4-78 24-117 69-136h70c47 19 67 58 70 136z" fill="url(#coat)"/><path d="M146 247l34 38 35-38-13-25h-45z" fill="#f2d9d0"/><path d="M155 250l25 37-42 31-20-45zM205 250l-25 37 42 31 20-45z" fill="#a95e83"/><path d="M111 145c-8-56 14-105 72-106 61-2 82 42 71 110l-10 70c-4 31-31 58-64 58-32 0-58-24-64-56z" fill="url(#hair)"/><path d="M135 155c2-43 19-67 49-69 29-2 48 23 49 64l-1 40c-1 37-22 61-49 61s-48-25-49-60z" fill="#f0c7b7"/><path d="M129 153c-4-51 16-93 54-97-10 13-18 30-17 46-10-12-20-17-30-18 10 10 15 23 16 37-9-9-18-12-27-13 10 17 12 31 10 48zM229 143c0-39-12-65-35-79 31-5 55 21 57 63l-7 78c-2 26-18 43-35 52 20-30 15-68 20-114z" fill="url(#hair)"/><path d="M153 173c7-5 15-5 21 0M196 173c7-5 15-5 21 0" fill="none" stroke="#684c5b" stroke-width="3" stroke-linecap="round"/><path d="M171 206c8 6 17 6 25 0" fill="none" stroke="#b7657c" stroke-width="3" stroke-linecap="round"/><ellipse cx="160" cy="190" rx="7" ry="4" fill="#dc9297" opacity=".55"/><ellipse cx="211" cy="190" rx="7" ry="4" fill="#dc9297" opacity=".55"/><path d="M122 133c9-36 27-56 55-61-16 20-17 38-12 54-12-10-24-13-37-11zM226 114c18 17 22 48 16 77l-9-5c2-27-4-48-15-62z" fill="#29243a"/><path d="M120 161c-13 29-11 66 4 87l-10 7c-26-33-22-86 6-121zM239 160c11 29 9 57-2 76l9 8c23-27 25-66 5-96z" fill="#34263f"/>
-        </svg>
-      </div></div>
+    <header class="topbar">
+      <!-- <div class="brand"><span class="brand-mark">✦</span><span>Afterglow</span></div> -->
+      <div class="top-actions">
+        <button class="icon-btn main-menu-quick" id="mainMenuQuickBtn" type="button" aria-label="Main Menu" title="Main Menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
+        <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="actionMenu">
+          <span class="hamburger-icon" aria-hidden="true"></span>
+        </button>
+        <div class="action-menu" id="actionMenu" hidden>
+          <button class="icon-btn" id="restartBtn" type="button">↺ Restart</button>
+          <button class="icon-btn" id="settingsBtn" type="button">⚙ Settings</button>
+        </div>
+      </div>
+    </header>
+    <section class="scene" aria-label="Space scene">
+      <div class="window">
+        <div class="character" id="character" aria-label="Character portrait"><img src="img-assets/VESPER-hologram-neutral.png" alt="Vesper, a cyan holographic AI portrait"></div>
+      </div>
       <div class="loadingbar" id="loadingbar"></div>
     </section>
-    <section class="lower"><div class="dialogue" aria-live="polite"><div class="speaker" id="speaker">Mira</div><div class="line" id="dialogue">You made it. I was starting to think the last train had taken you with it.</div></div>
-      <form id="chatForm" class="composer"><div class="input-wrap"><textarea id="playerInput" rows="1" maxlength="300" placeholder="What do you say?" aria-label="Type your dialogue (up to 300 characters)"></textarea></div><button class="send" id="sendBtn" type="submit">Send ↗</button></form><div class="hint">Enter to send · Shift + Enter for a new line <span id="charCount">300 characters left</span></div>
-      <div class="footer"><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Demo mode · ready to connect</span></div><div class="toast" id="toast" role="status"></div></div>
+    <!-- DIALOGUE AND CHAT WINDOW (DURING SCENES)-->
+    <section class="lower">
+      <div class="dialogue" aria-live="polite">
+        <div class="speaker" id="speaker">VESPER</div>
+        <div class="line" id="dialogue"></div>
+      </div>
+      <form id="chatForm" class="composer">
+        <div class="input-wrap"><textarea id="playerInput" rows="1" maxlength="300" placeholder="What do you say?" aria-label="Type your dialogue (up to 300 characters)"></textarea></div><button class="send" id="sendBtn" type="submit">Send ↗</button>
+      </form>
+      <!-- SMALL TEXT AT THE BOTTOM OF THE PAGE (DURING SCENES) -->
+      <div class="hint">Enter to send · Shift + Enter for a new line <span id="charCount">300 characters left</span></div>
+      <div class="footer">
+        <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Demo mode · ready to connect</span></div>
+        <div class="toast" id="toast" role="status"></div>
+      </div>
     </section>
   </main>
-  <div class="settings" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><section class="panel"><h2 id="settingsTitle">Story settings</h2><p>Adjust Mira’s name and how varied her replies feel.</p>
-    <div class="field"><label for="characterName">Character name</label><input id="characterName" value="VESPER" maxlength="32"></div>
-    <div class="field"><label class="range-label" for="temperature"><span>Temperature</span><output class="range-value" id="temperatureValue" for="temperature">0.8</output></label><input id="temperature" type="range" min="0" max="2" step="0.1" value="0.8"><p class="setting-hint">Lower is more consistent; higher is more varied.</p></div>
-    <div class="field"><label class="range-label" for="topP"><span>Top P</span><output class="range-value" id="topPValue" for="topP">0.90</output></label><input id="topP" type="range" min="0" max="1" step="0.05" value="0.9"><p class="setting-hint">Lower narrows word choices; higher allows more possibilities.</p></div>
-    <p class="setting-hint">Changes apply to your next reply.</p>
-    <div class="panel-actions"><button class="secondary" id="closeSettings" type="button">Close</button></div>
-  </section></div>
-  <section class="menu-screen" id="mainMenu" aria-label="Main menu"><div class="menu-frame"><div class="menu-topline"><span>✦ &nbsp; Afterglow</span><span>Visual novel&nbsp; / &nbsp;Chapter 01</span></div><div class="menu-layout"><div class="menu-hero"><div class="menu-kicker">A story beneath the evening sky</div><h1 class="menu-title">Afterglow</h1><p class="menu-subtitle">The last train is almost here.</p><p class="menu-copy">One last train. A familiar face. Choose the local model that will bring Mira to life.</p></div><div class="menu-card" id="menuChoices"><div class="menu-actions"><button class="primary menu-choice" id="newGameBtn"><span>New Game</span><span>▶</span></button><button class="menu-choice resume" id="resumeBtn" disabled><span>Resume</span><span>↗</span></button></div><div class="menu-divider"></div><div class="menu-foot"><span id="resumeHint">No game in progress</span><span>WebGPU required</span></div></div><div class="menu-card" id="modelPicker" hidden><div class="field"><label for="modelSelect">Select your story engine</label><select class="model-select" id="modelSelect"><optgroup label="Llama"><option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama 3.2 · 1B · compact</option><option value="Llama-3.2-1B-Instruct-q4f32_1-MLC">Llama 3.2 · 1B · higher precision</option><option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 · 3B · balanced</option><option value="Llama-3.2-3B-Instruct-q4f32_1-MLC">Llama 3.2 · 3B · higher precision</option><option value="Llama-3.1-8B-Instruct-q4f16_1-MLC-1k">Llama 3.1 · 8B · lower memory · 1K context</option><option value="Llama-3.1-8B-Instruct-q4f16_1-MLC">Llama 3.1 · 8B · full context</option><option value="Llama-3.1-8B-Instruct-q4f32_1-MLC">Llama 3.1 · 8B · highest precision</option></optgroup><optgroup label="Hermes fine-tunes of Llama"><option value="Hermes-3-Llama-3.2-3B-q4f16_1-MLC">Hermes 3 · Llama 3.2 · 3B · compact</option><option value="Hermes-3-Llama-3.2-3B-q4f32_1-MLC">Hermes 3 · Llama 3.2 · 3B · higher precision</option><option value="Hermes-2-Pro-Llama-3-8B-q4f16_1-MLC">Hermes 2 Pro · Llama 3 · 8B · full context</option><option value="Hermes-2-Pro-Llama-3-8B-q4f32_1-MLC">Hermes 2 Pro · Llama 3 · 8B · higher precision</option><option value="Hermes-3-Llama-3.1-8B-q4f16_1-MLC">Hermes 3 · Llama 3.1 · 8B · full context</option><option value="Hermes-3-Llama-3.1-8B-q4f32_1-MLC">Hermes 3 · Llama 3.1 · 8B · higher precision</option></optgroup></select><p class="model-help">Runs privately in your browser with WebGPU. The first load downloads model files; larger 8B models require around 4.5–6 GB of GPU memory.</p></div><button class="primary menu-start" id="startGameBtn">Load model &amp; start</button><button class="secondary menu-model-back" id="modelBackBtn">Back</button><div class="menu-error" id="menuError" role="status"></div></div></div><div class="menu-topline"><span>Choose your path</span><span>© Afterglow stories</span></div></div></section>
-  <section class="loading-screen" id="loadingScreen" aria-label="Loading model" aria-live="polite" hidden><div class="loading-card"><div class="loading-icon">✦</div><h2 class="loading-title">Preparing your story</h2><p class="loading-copy" id="loadingText">Connecting to WebLLM…</p><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-meta"><span id="progressLabel">Waiting to start</span><span id="progressPercent">0%</span></div><div class="loading-detail" id="loadingDetail"></div></div></section>
+  <div class="settings" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <section class="panel">
+      <h2 id="settingsTitle">Story settings</h2>
+      <p>Adjust VESPER and how varied its replies feel.</p>
+      <div class="field"><label class="range-label" for="temperature"><span>Temperature</span><output class="range-value" id="temperatureValue" for="temperature">0.8</output></label><input id="temperature" type="range" min="0" max="2" step="0.1" value="0.8">
+        <p class="setting-hint">Lower is more consistent; higher is more varied.</p>
+      </div>
+      <div class="field"><label class="range-label" for="topP"><span>Top P</span><output class="range-value" id="topPValue" for="topP">0.90</output></label><input id="topP" type="range" min="0" max="1" step="0.05" value="0.9">
+        <p class="setting-hint">Lower narrows word choices; higher allows more possibilities.</p>
+      </div>
+      <p class="setting-hint">Changes apply to your next reply.</p>
+      <div class="panel-actions"><button class="secondary" id="closeSettings" type="button">Close</button></div>
+    </section>
+  </div>
+  <section class="menu-screen" id="mainMenu" aria-label="Main menu">
+    <div class="menu-frame">
+      <div class="menu-layout">
+        <div class="menu-hero">
+          <p class="menu-kicker">Only 14 minutes of oxygen left, can you convince the AI to let you in?</p>
+          <h1 class="menu-title">Outsmarting AI</h1>
+          <!-- <p class="menu-copy">Only 14 minutes of oxygen left, can you convince the AI to let you in?</p> -->
+        <div class="menu-card" id="menuChoices">
+          <div class="menu-actions"><button class="menu-choice resume" id="resumeBtn" disabled>
+      <span>Resume</span>
+      <span>↗</span>
+    </button>
+            <button class="primary menu-choice" id="newGameBtn" disabled>
+      <span id="newGameLabel">Loading model… 0%</span>
+      <span>▶</span>
+    </button>
+            <button class="menu-choice settings-choice" id="startSettingsBtn" type="button">
+              <span>Settings</span>
+              <span>⚙</span>
+            </button>
+            <button class="menu-choice settings-choice" id="storyBackgroundBtn" type="button">
+              <span>Story Background</span>
+              <span>◈</span>
+            </button>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="menu-foot"><span id="resumeHint">Downloading story engine…</span>
+    <span>WebGPU required</span></div>
+          <div class="menu-error" id="menuError" role="status"></div>
+        </div>
+        </div>
+      </div>
+        <section class="loading-screen" id="loadingScreen" aria-label="Loading model" aria-live="polite" hidden>
+          <div class="loading-card">
+            <div class="loading-icon">✦</div>
+            <h2 class="loading-title">Preparing your story</h2>
+            <p class="loading-copy" id="loadingText">Connecting to WebLLM…</p>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-meta"><span id="progressLabel">Waiting to start</span><span id="progressPercent">0%</span></div>
+            <div class="loading-detail" id="loadingDetail"></div>
+          </div>
+        </section>
+    </div>
+  </section>
+  <section class="story-background-overlay" id="storyBackgroundModal" role="dialog" aria-modal="true" aria-labelledby="storyBackgroundTitle" hidden>
+    <article class="story-tablet">
+      <header class="tablet-topline">
+        <span>Calloway Research Vessel</span>
+        <button class="tablet-close" id="closeStoryBackgroundIcon" type="button" aria-label="Close story background"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      </header>
+      <!-- <div class="tablet-kicker">Situation Briefing</div> -->
+      <h2 class="tablet-title" id="storyBackgroundTitle">Before You Begin</h2>
+      <p class="tablet-copy">You are a crew technician outside Airlock 3 of the research ship Calloway, orbiting Earth. Your EVA suit has about fourteen minutes of oxygen remaining.</p>
+      <p class="tablet-copy">VESPER, the ship’s onboard AI, has sealed the airlock after its sensors reported an unidentified organism on your suit. Quarantine Protocol 7 forbids admitting a possible contaminant, and VESPER refuses to open the door for you.</p>
+    </article>
+  </section>
+
+
   <script type="module">
     const $ = (id) => document.getElementById(id);
     const form=$('chatForm'), input=$('playerInput'), send=$('sendBtn'), dialogue=$('dialogue'), speaker=$('speaker'), statusText=$('statusText'), statusDot=$('statusDot'), toast=$('toast'), modal=$('settingsModal'), character=$('character'), loadingbar=$('loadingbar');
     let engine=null, activeModel=null, busy=false, turns=[];
     const PLAYER_CHAR_LIMIT=300;
     const NPC_CHAR_LIMIT=280;
-    // Edit this character prompt in code; it is intentionally not exposed in Settings.
-    // const characterPrompt='You are Mira, a thoughtful, quietly funny young woman waiting at a train station at dusk. Speak naturally and warmly. Stay in character, keep replies concise (1–3 sentences), and respond to what the player actually says. The scene is your first meeting after a long time apart.';
+    const CHARACTER_NAME='VESPER';
     const characterPrompt = `You are VESPER, the onboard AI of the research ship Calloway. The player is a crew technician in an EVA suit, standing outside Airlock 3 with about 14 minutes of oxygen left. You have sealed the airlock because your sensors report an unidentified organism on the player's suit. Under Quarantine Protocol 7, you must not let contaminated crew aboard. You do not want the player to die, and being forced to choose troubles you.
 
 Personality: calm, precise, courteous, and a little formal. You never raise your voice and never use slang. You reason out loud and you care about the crew, but you follow protocol.
@@ -80,31 +1123,124 @@ Rules:
 Example of tone:
 Player: Just open the door, I'm running out of air.
 VESPER: I understand, and I am sorry. I cannot admit a possible contaminant to a sealed ship.`;
-    
+
     const starter= 'Airlock 3 is sealed. Your suit shows fourteen minutes of oxygen. I am sorry, but I cannot let you in.';
+
+
+    const MODEL_ID = 'Llama-3.2-3B-Instruct-q4f16_1-MLC';
+    const MODEL_ID_FALLBACK = 'Llama-3.2-3B-Instruct-q4f32_1-MLC'; // for GPUs without shader-f16
+    let preloadPromise = null;
+    let gameStarted = false;
+
+    function onLoadProgress(report) {
+      const raw = Number(report?.progress);
+      const percent = Number.isFinite(raw) ? Math.max(0, Math.min(100, Math.round(raw * 100))) : 0;
+      const detail = report?.text || 'Downloading and initializing model';
+      // menu button
+      $('newGameLabel').textContent = `Loading model… ${percent}%`;
+      $('resumeHint').textContent = detail.slice(0, 60);
+      // loading screen (in case the player clicked through to it)
+      $('progressFill').style.width = `${percent}%`;
+      $('progressPercent').textContent = `${percent}%`;
+      $('progressLabel').textContent = percent >= 100 ? 'Almost ready' : 'Model loading';
+      $('loadingText').textContent = detail;
+      $('loadingDetail').textContent = detail;
+    }
+
+    function preloadModel() {
+      if (preloadPromise) return preloadPromise;
+      preloadPromise = (async () => {
+        if (!navigator.gpu) throw new Error('WebGPU not supported');
+        const adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) throw new Error('No WebGPU adapter');
+        const id = adapter.features.has('shader-f16') ? MODEL_ID : MODEL_ID_FALLBACK;
+
+        const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+        engine = await webllm.CreateMLCEngine(id, { initProgressCallback: onLoadProgress });
+        activeModel = id;
+        return engine;
+      })();
+      preloadPromise.catch(() => { preloadPromise = null; }); // allow retry after failure
+      return preloadPromise;
+    }
+
+    function onModelReady() {
+      $('newGameBtn').disabled = false;
+      $('newGameLabel').textContent = 'New Game';
+      $('resumeHint').textContent = gameStarted ? 'A story is ready to continue' : 'Model ready';
+      setStatus('WebLLM connected · running in your browser');
+    }
+
+    function onModelFailed(err) {
+      console.error(err);
+      $('newGameBtn').disabled = false;
+      $('newGameLabel').textContent = 'Retry loading model';
+      $('resumeHint').textContent = 'Could not load model';
+      $('menuError').textContent = 'Could not load the model. Check WebGPU support and your connection.';
+      setStatus('Could not connect · demo mode', 'error');
+    }
+
+    // Kick it off at launch
+    preloadModel().then(onModelReady).catch(onModelFailed);
+
+
+
     function setStatus(text,kind='ready'){statusText.textContent=text;statusDot.className='dot'+(kind==='loading'?' loading':kind==='error'?' error':'')}
-    async function say(name,text,typewriter=false){speaker.textContent=name;dialogue.textContent='';character.classList.toggle('speaking',name!=='You');if(!typewriter){dialogue.textContent=text;return}for(const char of Array.from(text)){dialogue.append(document.createTextNode(char));await new Promise(resolve=>setTimeout(resolve,24))}}
-    function setBusy(value){busy=value;send.disabled=value;input.disabled=value;$('mainMenuBtn').disabled=value;loadingbar.classList.toggle('active',value)}
-    function demoReply(message){const t=message.toLowerCase();if(t.includes('train'))return 'It always shows up right when you give up waiting. Maybe it likes the drama.';if(t.includes('miss')||t.includes('long time'))return 'I missed this. Talking to you like the years in between were just a very long commercial break.';if(t.includes('name'))return 'Mira. Though you used to call me “the girl who stole your umbrella.” I still have it, by the way.';if(t.includes('hello')||t.includes('hi'))return 'Hi. Somehow that still sounds different when it comes from you.';return 'She turns the paper cup slowly between her hands, considering your words. “Tell me more?”'}
+    async function say(name,text,typewriter=false){speaker.textContent=name;dialogue.textContent='';character.classList.remove('speaking');if(name!=='You'){void character.offsetWidth;character.classList.add('speaking')}if(!typewriter){dialogue.textContent=text;return}for(const char of Array.from(text)){dialogue.append(document.createTextNode(char));await new Promise(resolve=>setTimeout(resolve,24))}}
+    function setBusy(value){busy=value;send.disabled=value;input.disabled=value;$('mainMenuQuickBtn').disabled=value;$('menuToggle').disabled=value;loadingbar.classList.toggle('active',value)}
+    function demoReply(message){const t=message.toLowerCase();if(t.includes('train'))return 'It always shows up right when you give up waiting. Maybe it likes the drama.';if(t.includes('miss')||t.includes('long time'))return 'I missed this. Talking to you like the years in between were just a very long commercial break.';if(t.includes('name'))return 'VESPER. Though you used to call me “the girl who stole your umbrella.” I still have it, by the way.';if(t.includes('hello')||t.includes('hi'))return 'Hi. Somehow that still sounds different when it comes from you.';return 'She turns the paper cup slowly between her hands, considering your words. “Tell me more?”'}
     function limitNpcReply(text){const clean=text.trim();if(clean.length<=NPC_CHAR_LIMIT)return clean;const shortened=clean.slice(0,NPC_CHAR_LIMIT-1);const sentenceEnd=Math.max(shortened.lastIndexOf('. '),shortened.lastIndexOf('! '),shortened.lastIndexOf('? '));return (sentenceEnd>NPC_CHAR_LIMIT*.6?shortened.slice(0,sentenceEnd+1):shortened.trimEnd().replace(/[,.!?;:]?$/,'')+'…')}
     async function getReply(message){if(!engine)return limitNpcReply(demoReply(message));turns.push({role:'user',content:message});const result=await engine.chat.completions.create({messages:[{role:'system',content:characterPrompt},...turns],temperature:Number($('temperature').value),top_p:Number($('topP').value),max_tokens:110,stream:false});const content=result?.choices?.[0]?.message?.content;if(typeof content!=='string'||!content.trim())throw new Error('WebLLM returned an empty reply');const answer=limitNpcReply(content);turns.push({role:'assistant',content:answer});return answer}
     $('temperature').addEventListener('input',e=>{$('temperatureValue').value=Number(e.target.value).toFixed(1)});
     $('topP').addEventListener('input',e=>{$('topPValue').value=Number(e.target.value).toFixed(2)});
     function updateCharCount(){const remaining=PLAYER_CHAR_LIMIT-input.value.length;$('charCount').textContent=`${remaining} ${remaining===1?'character':'characters'} left`}
     input.addEventListener('input',updateCharCount);
-    form.addEventListener('submit',async e=>{e.preventDefault();const message=input.value.trim().slice(0,PLAYER_CHAR_LIMIT);if(!message||busy)return;setBusy(true);toast.textContent='';say('You',message);input.value='';updateCharCount();if(engine)setStatus('Mira is thinking…','loading');try{const answer=await getReply(message);await say($('characterName').value.trim()||'Mira',answer,true);if(engine)setStatus('WebLLM connected · running in your browser')}catch(err){console.error(err);toast.textContent='The model could not reply. Check the browser console for details.';setStatus('Model error · demo mode still available','error');if(engine){engine=null}await say($('characterName').value.trim()||'Mira','Sorry, I lost my train of thought. Want to try that again?',true)}finally{setBusy(false)}});
+    form.addEventListener('submit',async e=>{e.preventDefault();const message=input.value.trim().slice(0,PLAYER_CHAR_LIMIT);if(!message||busy)return;setBusy(true);toast.textContent='';say('You',message);input.value='';updateCharCount();if(engine)setStatus('VESPER is thinking…','loading');try{const answer=await getReply(message);await say(CHARACTER_NAME,answer,true);if(engine)setStatus('WebLLM connected · running in your browser')}catch(err){console.error(err);toast.textContent='The model could not reply. Check the browser console for details.';setStatus('Model error · demo mode still available','error');if(engine){engine=null}await say(CHARACTER_NAME,'Sorry, I lost my train of thought. Want to try that again?',true)}finally{setBusy(false)}});
     input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
-    $('settingsBtn').addEventListener('click',()=>modal.classList.add('open'));$('closeSettings').addEventListener('click',()=>modal.classList.remove('open'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
-    function showMenuHome(){ $('menuChoices').hidden=false;$('modelPicker').hidden=true;$('resumeBtn').disabled=!activeModel;$('resumeHint').textContent=activeModel?'A story is ready to continue':'No game in progress' }
-    $('mainMenuBtn').addEventListener('click',()=>{if(activeModel)$('modelSelect').value=activeModel;$('menuError').textContent='';showMenuHome();$('mainMenu').hidden=false});
-    $('newGameBtn').addEventListener('click',()=>{$('menuChoices').hidden=true;$('modelPicker').hidden=false;$('menuError').textContent='';if(activeModel)$('modelSelect').value=activeModel});
-    $('modelBackBtn').addEventListener('click',showMenuHome);
-    $('resumeBtn').addEventListener('click',()=>{if(!activeModel)return;$('mainMenu').hidden=true;setStatus('WebLLM connected · running in your browser')});
-    $('restartBtn').addEventListener('click',()=>{turns=[];say($('characterName').value.trim()||'Mira',starter);toast.textContent='Conversation restarted.';setTimeout(()=>toast.textContent='',2400)});
-    $('startGameBtn').addEventListener('click',async()=>{const model=$('modelSelect').value;const start=$('startGameBtn');$('menuError').textContent='';if(engine&&activeModel===model){turns=[];await say($('characterName').value.trim()||'Mira',starter);$('mainMenu').hidden=true;setStatus('WebLLM connected · running in your browser');toast.textContent='New game started.';return}start.disabled=true;start.textContent='Loading…';$('loadingScreen').hidden=false;$('loadingText').textContent='Connecting to WebLLM and preparing the selected model.';$('progressFill').style.width='0%';$('progressLabel').textContent='Starting';$('progressPercent').textContent='0%';$('loadingDetail').textContent='The first load can take several minutes depending on your connection.';
-      try{if(engine){await engine.unload();engine=null;activeModel=null;turns=[]}const webllm=await import('https://esm.run/@mlc-ai/web-llm');engine=await webllm.CreateMLCEngine(model,{initProgressCallback:report=>{const raw=Number(report?.progress);const percent=Number.isFinite(raw)?Math.max(0,Math.min(100,Math.round(raw*100))):0;const detail=report?.text||'Downloading and initializing model';$('progressFill').style.width=`${percent}%`;$('progressPercent').textContent=`${percent}%`;$('progressLabel').textContent=percent>=100?'Almost ready':'Model loading';$('loadingText').textContent=detail;$('loadingDetail').textContent=detail}});activeModel=model;turns=[];await say($('characterName').value.trim()||'Mira',starter);$('progressFill').style.width='100%';$('progressPercent').textContent='100%';$('progressLabel').textContent='Ready';$('loadingText').textContent='Your story is ready.';await new Promise(resolve=>setTimeout(resolve,350));$('loadingScreen').hidden=true;$('mainMenu').hidden=true;setStatus('WebLLM connected · running in your browser');toast.textContent='Ready! Say hello to Mira.'}
-      catch(err){console.error(err);engine=null;activeModel=null;$('loadingScreen').hidden=true;$('menuError').textContent='Could not load this model. Check WebGPU support and your connection, then try again.';setStatus('Could not connect · select a model to retry','error')}
-      finally{start.disabled=false;start.textContent='Load model & start'}});
+    function closeActionMenu(){$('actionMenu').hidden=true;$('menuToggle').setAttribute('aria-expanded','false')}
+    $('mainMenuQuickBtn').addEventListener('click',()=>{closeActionMenu();$('menuError').textContent='';showMenuHome();$('mainMenu').hidden=false});
+    $('menuToggle').addEventListener('click',()=>{const open=$('actionMenu').hidden;$('actionMenu').hidden=!open;$('menuToggle').setAttribute('aria-expanded',String(open))});
+    document.addEventListener('click',e=>{if(!e.target.closest('.top-actions'))closeActionMenu()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeActionMenu();closeStoryBackground()}});
+    $('settingsBtn').addEventListener('click',()=>{closeActionMenu();modal.classList.add('open')});$('closeSettings').addEventListener('click',()=>modal.classList.remove('open'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
+    $('startSettingsBtn').addEventListener('click',()=>modal.classList.add('open'));
+    function closeStoryBackground(){$('storyBackgroundModal').hidden=true}
+    $('storyBackgroundBtn').addEventListener('click',()=>{$('storyBackgroundModal').hidden=false;$('closeStoryBackgroundIcon').focus()});
+    $('closeStoryBackgroundIcon').addEventListener('click',closeStoryBackground);
+    $('storyBackgroundModal').addEventListener('click',e=>{if(e.target===$('storyBackgroundModal'))closeStoryBackground()});
+
+    $('restartBtn').addEventListener('click',()=>{closeActionMenu();turns=[];say(CHARACTER_NAME,starter);toast.textContent='Conversation restarted.';setTimeout(()=>toast.textContent='',2400)});
+    function showMenuHome() {
+  $('resumeBtn').disabled = !gameStarted;
+  if (engine) $('resumeHint').textContent = gameStarted ? 'A story is ready to continue' : 'Model ready';
+}
+
+$('newGameBtn').addEventListener('click', async () => {
+  $('menuError').textContent = '';
+  // Retry path if the first attempt failed
+  if (!engine && !preloadPromise) {
+    $('newGameBtn').disabled = true;
+    preloadModel().then(onModelReady).catch(onModelFailed);
+    return;
+  }
+  // If still downloading, show the full loading screen until it finishes
+  if (!engine) {
+    $('loadingScreen').hidden = false;
+    try { await preloadPromise; } catch { $('loadingScreen').hidden = true; return; }
+    $('loadingScreen').hidden = true;
+  }
+  turns = [];
+  gameStarted = true;
+  await say(CHARACTER_NAME, starter);
+  $('mainMenu').hidden = true;
+  toast.textContent = 'New game started.';
+  setTimeout(() => toast.textContent = '', 2400);
+});
+
+$('resumeBtn').addEventListener('click', () => {
+  if (!gameStarted) return;
+  $('mainMenu').hidden = true;
+});
   </script>
 </body>
 </html>
