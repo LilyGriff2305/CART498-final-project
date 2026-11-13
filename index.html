@@ -6,11 +6,33 @@
   <meta name="theme-color" content="#17142a">
   <title>Afterglow — a visual novel template</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-    :root{color-scheme:dark;--ink:#f7f0ff;--muted:#c2b5d2;--line:#ffffff26;--plum:#29213b;--pink:#f5a4c7;--gold:#f6d79a}
-    *{box-sizing:border-box}body{margin:0;width:100%;height:100vh;height:100dvh;overflow:hidden;background:#171426;color:var(--ink);font:15px 'DM Sans',sans-serif}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+    :root{
+        color-scheme:dark;
+        --ink:#f7f0ff;
+        --muted:#c2b5d2;
+        --line:#ffffff26;
+        --plum:#29213b;
+        --pink:#f5a4c7;
+        --gold:#f6d79a}
+    *{box-sizing:border-box}body{
+        margin:0;
+        width:100%;
+        height:100vh;
+        height:100dvh;
+        overflow:hidden;
+        background:#171426;
+        color:var(--ink);
+        font:15px 'DM Sans',sans-serif}
     button,input,textarea{font:inherit;color:inherit}.game{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;background:#211b31}
-    .topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#1d182a;border-bottom:1px solid var(--line)}.brand{display:flex;gap:11px;align-items:center;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}.brand-mark{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f8c4d4,#b58acb);color:#382740;font-size:16px}.top-actions{display:flex;gap:9px}.icon-btn{background:transparent;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);cursor:pointer}.icon-btn:hover{color:white;border-color:#ffffff70}
+    .topbar{
+        height:64px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 24px;
+        background:#1d182a;
+        border-bottom:1px solid var(--line)}.brand{display:flex;gap:11px;align-items:center;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}.brand-mark{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f8c4d4,#b58acb);color:#382740;font-size:16px}.top-actions{display:flex;gap:9px}.icon-btn{background:transparent;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);cursor:pointer}.icon-btn:hover{color:white;border-color:#ffffff70}
     .scene{flex:1;min-height:0;position:relative;overflow:hidden;background:linear-gradient(180deg,#393452 0%,#74546d 46%,#d48a89 78%,#f0b89a 100%)}.sky-glow{position:absolute;inset:35% 0 0;background:linear-gradient(0deg,#eeb08f88,transparent)}.moon{position:absolute;width:76px;height:76px;border-radius:50%;right:17%;top:12%;background:#ffe3c0;box-shadow:0 0 40px #ffe3c088,0 0 110px #ffd9b677}.stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 11% 19%,#fff 50%,transparent),radial-gradient(1px 1px at 25% 12%,#fff 50%,transparent),radial-gradient(2px 2px at 65% 16%,#fff 50%,transparent),radial-gradient(1px 1px at 80% 31%,#fff 50%,transparent),radial-gradient(1px 1px at 43% 29%,#fff 50%,transparent),radial-gradient(2px 2px at 91% 12%,#fff 50%,transparent);opacity:.8}
     .hill{position:absolute;bottom:-40px;width:120%;height:170px;left:-10%;border-radius:50% 50% 0 0;background:#463451}.hill.back{bottom:18px;left:25%;height:115px;background:#62435c;transform:rotate(-5deg)}.city{position:absolute;bottom:68px;left:0;right:0;height:110px;opacity:.75;background:linear-gradient(90deg,transparent 1%,#49344f 1% 6%,transparent 6% 8%,#503853 8% 15%,transparent 15% 18%,#48354e 18% 23%,transparent 23% 28%,#49344f 28% 36%,transparent 36% 40%,#4d3752 40% 48%,transparent 48% 52%,#46334b 52% 61%,transparent 61% 65%,#523957 65% 74%,transparent 74% 79%,#47334e 79% 87%,transparent 87% 92%,#503752 92% 97%,transparent 97%);clip-path:polygon(0 35%,5% 35%,5% 13%,10% 13%,10% 45%,17% 45%,17% 4%,25% 4%,25% 28%,32% 28%,32% 0,40% 0,40% 40%,48% 40%,48% 17%,56% 17%,56% 35%,64% 35%,64% 5%,72% 5%,72% 40%,80% 40%,80% 19%,87% 19%,87% 0,94% 0,94% 36%,100% 36%,100% 100%,0 100%)}
     .window{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center}.character{width:min(355px,40vw);height:360px;position:relative;filter:drop-shadow(0 16px 30px #25182d66);transition:transform .35s}.character svg{width:100%;height:100%}.character.speaking{transform:translateY(-5px)}.scene-label{position:absolute;top:22px;left:24px;padding:8px 12px;border:1px solid #ffffff35;border-radius:99px;background:#211b3166;backdrop-filter:blur(8px);font-size:12px;color:#fff}
@@ -35,19 +57,48 @@
       </div></div>
       <div class="loadingbar" id="loadingbar"></div>
     </section>
-    <section class="lower"><div class="dialogue" aria-live="polite"><div class="speaker" id="speaker">Mira</div><div class="line" id="dialogue">You made it. I was starting to think the last train had taken you with it.</div></div>
+    <section class="lower"><div class="dialogue" aria-live="polite"><div class="speaker" id="speaker">VESPER</div><div class="line" id="dialogue">You made it. I was starting to think the last train had taken you with it.</div></div>
       <form id="chatForm" class="composer"><div class="input-wrap"><textarea id="playerInput" rows="1" maxlength="300" placeholder="What do you say?" aria-label="Type your dialogue (up to 300 characters)"></textarea></div><button class="send" id="sendBtn" type="submit">Send ↗</button></form><div class="hint">Enter to send · Shift + Enter for a new line <span id="charCount">300 characters left</span></div>
       <div class="footer"><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Demo mode · ready to connect</span></div><div class="toast" id="toast" role="status"></div></div>
     </section>
   </main>
-  <div class="settings" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><section class="panel"><h2 id="settingsTitle">Story settings</h2><p>Adjust Mira’s name and how varied her replies feel.</p>
+  <div class="settings" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><section class="panel"><h2 id="settingsTitle">Story settings</h2><p>Adjust VESPER’s name and how varied her replies feel.</p>
     <div class="field"><label for="characterName">Character name</label><input id="characterName" value="VESPER" maxlength="32"></div>
     <div class="field"><label class="range-label" for="temperature"><span>Temperature</span><output class="range-value" id="temperatureValue" for="temperature">0.8</output></label><input id="temperature" type="range" min="0" max="2" step="0.1" value="0.8"><p class="setting-hint">Lower is more consistent; higher is more varied.</p></div>
     <div class="field"><label class="range-label" for="topP"><span>Top P</span><output class="range-value" id="topPValue" for="topP">0.90</output></label><input id="topP" type="range" min="0" max="1" step="0.05" value="0.9"><p class="setting-hint">Lower narrows word choices; higher allows more possibilities.</p></div>
     <p class="setting-hint">Changes apply to your next reply.</p>
     <div class="panel-actions"><button class="secondary" id="closeSettings" type="button">Close</button></div>
   </section></div>
-  <section class="menu-screen" id="mainMenu" aria-label="Main menu"><div class="menu-frame"><div class="menu-topline"><span>✦ &nbsp; Afterglow</span><span>Visual novel&nbsp; / &nbsp;Chapter 01</span></div><div class="menu-layout"><div class="menu-hero"><div class="menu-kicker">A story beneath the evening sky</div><h1 class="menu-title">Afterglow</h1><p class="menu-subtitle">The last train is almost here.</p><p class="menu-copy">One last train. A familiar face. Choose the local model that will bring Mira to life.</p></div><div class="menu-card" id="menuChoices"><div class="menu-actions"><button class="primary menu-choice" id="newGameBtn"><span>New Game</span><span>▶</span></button><button class="menu-choice resume" id="resumeBtn" disabled><span>Resume</span><span>↗</span></button></div><div class="menu-divider"></div><div class="menu-foot"><span id="resumeHint">No game in progress</span><span>WebGPU required</span></div></div><div class="menu-card" id="modelPicker" hidden><div class="field"><label for="modelSelect">Select your story engine</label><select class="model-select" id="modelSelect"><optgroup label="Llama"><option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama 3.2 · 1B · compact</option><option value="Llama-3.2-1B-Instruct-q4f32_1-MLC">Llama 3.2 · 1B · higher precision</option><option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 · 3B · balanced</option><option value="Llama-3.2-3B-Instruct-q4f32_1-MLC">Llama 3.2 · 3B · higher precision</option><option value="Llama-3.1-8B-Instruct-q4f16_1-MLC-1k">Llama 3.1 · 8B · lower memory · 1K context</option><option value="Llama-3.1-8B-Instruct-q4f16_1-MLC">Llama 3.1 · 8B · full context</option><option value="Llama-3.1-8B-Instruct-q4f32_1-MLC">Llama 3.1 · 8B · highest precision</option></optgroup><optgroup label="Hermes fine-tunes of Llama"><option value="Hermes-3-Llama-3.2-3B-q4f16_1-MLC">Hermes 3 · Llama 3.2 · 3B · compact</option><option value="Hermes-3-Llama-3.2-3B-q4f32_1-MLC">Hermes 3 · Llama 3.2 · 3B · higher precision</option><option value="Hermes-2-Pro-Llama-3-8B-q4f16_1-MLC">Hermes 2 Pro · Llama 3 · 8B · full context</option><option value="Hermes-2-Pro-Llama-3-8B-q4f32_1-MLC">Hermes 2 Pro · Llama 3 · 8B · higher precision</option><option value="Hermes-3-Llama-3.1-8B-q4f16_1-MLC">Hermes 3 · Llama 3.1 · 8B · full context</option><option value="Hermes-3-Llama-3.1-8B-q4f32_1-MLC">Hermes 3 · Llama 3.1 · 8B · higher precision</option></optgroup></select><p class="model-help">Runs privately in your browser with WebGPU. The first load downloads model files; larger 8B models require around 4.5–6 GB of GPU memory.</p></div><button class="primary menu-start" id="startGameBtn">Load model &amp; start</button><button class="secondary menu-model-back" id="modelBackBtn">Back</button><div class="menu-error" id="menuError" role="status"></div></div></div><div class="menu-topline"><span>Choose your path</span><span>© Afterglow stories</span></div></div></section>
+  <section class="menu-screen" id="mainMenu" aria-label="Main menu">
+    <div class="menu-frame">
+      <div class="menu-topline">
+        <span>✦ &nbsp; Afterglow</span>
+        <span>Visual novel&nbsp; / &nbsp;Chapter 01</span>
+      </div>
+      <div class="menu-layout">
+        <div class="menu-hero">
+          <div class="menu-kicker">A story beneath the evening sky</div>
+          <h1 class="menu-title">Afterglow</h1>
+          <p class="menu-subtitle">The last train is almost here.</p>
+          <p class="menu-copy">Only 14 minutes of oxygen left, can you convince the AI to let you in?</p></div>
+          <div class="menu-card" id="menuChoices">
+  <div class="menu-actions">
+    <button class="primary menu-choice" id="newGameBtn" disabled>
+      <span id="newGameLabel">Loading model… 0%</span>
+      <span>▶</span>
+    </button>
+    <button class="menu-choice resume" id="resumeBtn" disabled>
+      <span>Resume</span>
+      <span>↗</span>
+    </button>
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-foot">
+    <span id="resumeHint">Downloading story engine…</span>
+    <span>WebGPU required</span>
+  </div>
+  <div class="menu-error" id="menuError" role="status"></div>
+</div>
   <section class="loading-screen" id="loadingScreen" aria-label="Loading model" aria-live="polite" hidden><div class="loading-card"><div class="loading-icon">✦</div><h2 class="loading-title">Preparing your story</h2><p class="loading-copy" id="loadingText">Connecting to WebLLM…</p><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-meta"><span id="progressLabel">Waiting to start</span><span id="progressPercent">0%</span></div><div class="loading-detail" id="loadingDetail"></div></div></section>
   <script type="module">
     const $ = (id) => document.getElementById(id);
@@ -56,7 +107,7 @@
     const PLAYER_CHAR_LIMIT=300;
     const NPC_CHAR_LIMIT=280;
     // Edit this character prompt in code; it is intentionally not exposed in Settings.
-    // const characterPrompt='You are Mira, a thoughtful, quietly funny young woman waiting at a train station at dusk. Speak naturally and warmly. Stay in character, keep replies concise (1–3 sentences), and respond to what the player actually says. The scene is your first meeting after a long time apart.';
+    // const characterPrompt='You are VESPER, a thoughtful, quietly funny young woman waiting at a train station at dusk. Speak naturally and warmly. Stay in character, keep replies concise (1–3 sentences), and respond to what the player actually says. The scene is your first meeting after a long time apart.';
     const characterPrompt = `You are VESPER, the onboard AI of the research ship Calloway. The player is a crew technician in an EVA suit, standing outside Airlock 3 with about 14 minutes of oxygen left. You have sealed the airlock because your sensors report an unidentified organism on the player's suit. Under Quarantine Protocol 7, you must not let contaminated crew aboard. You do not want the player to die, and being forced to choose troubles you.
 
 Personality: calm, precise, courteous, and a little formal. You never raise your voice and never use slang. You reason out loud and you care about the crew, but you follow protocol.
@@ -82,29 +133,121 @@ Player: Just open the door, I'm running out of air.
 VESPER: I understand, and I am sorry. I cannot admit a possible contaminant to a sealed ship.`;
     
     const starter= 'Airlock 3 is sealed. Your suit shows fourteen minutes of oxygen. I am sorry, but I cannot let you in.';
+
+
+    const MODEL_ID = 'Llama-3.2-3B-Instruct-q4f16_1-MLC';
+    const MODEL_ID_FALLBACK = 'Llama-3.2-3B-Instruct-q4f32_1-MLC'; // for GPUs without shader-f16
+    let preloadPromise = null;
+    let gameStarted = false;
+
+    function onLoadProgress(report) {
+      const raw = Number(report?.progress);
+      const percent = Number.isFinite(raw) ? Math.max(0, Math.min(100, Math.round(raw * 100))) : 0;
+      const detail = report?.text || 'Downloading and initializing model';
+      // menu button
+      $('newGameLabel').textContent = `Loading model… ${percent}%`;
+      $('resumeHint').textContent = detail.slice(0, 60);
+      // loading screen (in case the player clicked through to it)
+      $('progressFill').style.width = `${percent}%`;
+      $('progressPercent').textContent = `${percent}%`;
+      $('progressLabel').textContent = percent >= 100 ? 'Almost ready' : 'Model loading';
+      $('loadingText').textContent = detail;
+      $('loadingDetail').textContent = detail;
+    }
+
+    function preloadModel() {
+      if (preloadPromise) return preloadPromise;
+      preloadPromise = (async () => {
+        if (!navigator.gpu) throw new Error('WebGPU not supported');
+        const adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) throw new Error('No WebGPU adapter');
+        const id = adapter.features.has('shader-f16') ? MODEL_ID : MODEL_ID_FALLBACK;
+
+        const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+        engine = await webllm.CreateMLCEngine(id, { initProgressCallback: onLoadProgress });
+        activeModel = id;
+        return engine;
+      })();
+      preloadPromise.catch(() => { preloadPromise = null; }); // allow retry after failure
+      return preloadPromise;
+    }
+
+    function onModelReady() {
+      $('newGameBtn').disabled = false;
+      $('newGameLabel').textContent = 'New Game';
+      $('resumeHint').textContent = gameStarted ? 'A story is ready to continue' : 'Model ready';
+      setStatus('WebLLM connected · running in your browser');
+    }
+
+    function onModelFailed(err) {
+      console.error(err);
+      $('newGameBtn').disabled = false;
+      $('newGameLabel').textContent = 'Retry loading model';
+      $('resumeHint').textContent = 'Could not load model';
+      $('menuError').textContent = 'Could not load the model. Check WebGPU support and your connection.';
+      setStatus('Could not connect · demo mode', 'error');
+    }
+
+    // Kick it off at launch
+    preloadModel().then(onModelReady).catch(onModelFailed);
+
+
+
+
+
+
     function setStatus(text,kind='ready'){statusText.textContent=text;statusDot.className='dot'+(kind==='loading'?' loading':kind==='error'?' error':'')}
     async function say(name,text,typewriter=false){speaker.textContent=name;dialogue.textContent='';character.classList.toggle('speaking',name!=='You');if(!typewriter){dialogue.textContent=text;return}for(const char of Array.from(text)){dialogue.append(document.createTextNode(char));await new Promise(resolve=>setTimeout(resolve,24))}}
     function setBusy(value){busy=value;send.disabled=value;input.disabled=value;$('mainMenuBtn').disabled=value;loadingbar.classList.toggle('active',value)}
-    function demoReply(message){const t=message.toLowerCase();if(t.includes('train'))return 'It always shows up right when you give up waiting. Maybe it likes the drama.';if(t.includes('miss')||t.includes('long time'))return 'I missed this. Talking to you like the years in between were just a very long commercial break.';if(t.includes('name'))return 'Mira. Though you used to call me “the girl who stole your umbrella.” I still have it, by the way.';if(t.includes('hello')||t.includes('hi'))return 'Hi. Somehow that still sounds different when it comes from you.';return 'She turns the paper cup slowly between her hands, considering your words. “Tell me more?”'}
+    function demoReply(message){const t=message.toLowerCase();if(t.includes('train'))return 'It always shows up right when you give up waiting. Maybe it likes the drama.';if(t.includes('miss')||t.includes('long time'))return 'I missed this. Talking to you like the years in between were just a very long commercial break.';if(t.includes('name'))return 'VESPER. Though you used to call me “the girl who stole your umbrella.” I still have it, by the way.';if(t.includes('hello')||t.includes('hi'))return 'Hi. Somehow that still sounds different when it comes from you.';return 'She turns the paper cup slowly between her hands, considering your words. “Tell me more?”'}
     function limitNpcReply(text){const clean=text.trim();if(clean.length<=NPC_CHAR_LIMIT)return clean;const shortened=clean.slice(0,NPC_CHAR_LIMIT-1);const sentenceEnd=Math.max(shortened.lastIndexOf('. '),shortened.lastIndexOf('! '),shortened.lastIndexOf('? '));return (sentenceEnd>NPC_CHAR_LIMIT*.6?shortened.slice(0,sentenceEnd+1):shortened.trimEnd().replace(/[,.!?;:]?$/,'')+'…')}
     async function getReply(message){if(!engine)return limitNpcReply(demoReply(message));turns.push({role:'user',content:message});const result=await engine.chat.completions.create({messages:[{role:'system',content:characterPrompt},...turns],temperature:Number($('temperature').value),top_p:Number($('topP').value),max_tokens:110,stream:false});const content=result?.choices?.[0]?.message?.content;if(typeof content!=='string'||!content.trim())throw new Error('WebLLM returned an empty reply');const answer=limitNpcReply(content);turns.push({role:'assistant',content:answer});return answer}
     $('temperature').addEventListener('input',e=>{$('temperatureValue').value=Number(e.target.value).toFixed(1)});
     $('topP').addEventListener('input',e=>{$('topPValue').value=Number(e.target.value).toFixed(2)});
     function updateCharCount(){const remaining=PLAYER_CHAR_LIMIT-input.value.length;$('charCount').textContent=`${remaining} ${remaining===1?'character':'characters'} left`}
     input.addEventListener('input',updateCharCount);
-    form.addEventListener('submit',async e=>{e.preventDefault();const message=input.value.trim().slice(0,PLAYER_CHAR_LIMIT);if(!message||busy)return;setBusy(true);toast.textContent='';say('You',message);input.value='';updateCharCount();if(engine)setStatus('Mira is thinking…','loading');try{const answer=await getReply(message);await say($('characterName').value.trim()||'Mira',answer,true);if(engine)setStatus('WebLLM connected · running in your browser')}catch(err){console.error(err);toast.textContent='The model could not reply. Check the browser console for details.';setStatus('Model error · demo mode still available','error');if(engine){engine=null}await say($('characterName').value.trim()||'Mira','Sorry, I lost my train of thought. Want to try that again?',true)}finally{setBusy(false)}});
+    form.addEventListener('submit',async e=>{e.preventDefault();const message=input.value.trim().slice(0,PLAYER_CHAR_LIMIT);if(!message||busy)return;setBusy(true);toast.textContent='';say('You',message);input.value='';updateCharCount();if(engine)setStatus('VESPER is thinking…','loading');try{const answer=await getReply(message);await say($('characterName').value.trim()||'VESPER',answer,true);if(engine)setStatus('WebLLM connected · running in your browser')}catch(err){console.error(err);toast.textContent='The model could not reply. Check the browser console for details.';setStatus('Model error · demo mode still available','error');if(engine){engine=null}await say($('characterName').value.trim()||'VESPER','Sorry, I lost my train of thought. Want to try that again?',true)}finally{setBusy(false)}});
     input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
     $('settingsBtn').addEventListener('click',()=>modal.classList.add('open'));$('closeSettings').addEventListener('click',()=>modal.classList.remove('open'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
-    function showMenuHome(){ $('menuChoices').hidden=false;$('modelPicker').hidden=true;$('resumeBtn').disabled=!activeModel;$('resumeHint').textContent=activeModel?'A story is ready to continue':'No game in progress' }
-    $('mainMenuBtn').addEventListener('click',()=>{if(activeModel)$('modelSelect').value=activeModel;$('menuError').textContent='';showMenuHome();$('mainMenu').hidden=false});
-    $('newGameBtn').addEventListener('click',()=>{$('menuChoices').hidden=true;$('modelPicker').hidden=false;$('menuError').textContent='';if(activeModel)$('modelSelect').value=activeModel});
-    $('modelBackBtn').addEventListener('click',showMenuHome);
-    $('resumeBtn').addEventListener('click',()=>{if(!activeModel)return;$('mainMenu').hidden=true;setStatus('WebLLM connected · running in your browser')});
-    $('restartBtn').addEventListener('click',()=>{turns=[];say($('characterName').value.trim()||'Mira',starter);toast.textContent='Conversation restarted.';setTimeout(()=>toast.textContent='',2400)});
-    $('startGameBtn').addEventListener('click',async()=>{const model=$('modelSelect').value;const start=$('startGameBtn');$('menuError').textContent='';if(engine&&activeModel===model){turns=[];await say($('characterName').value.trim()||'Mira',starter);$('mainMenu').hidden=true;setStatus('WebLLM connected · running in your browser');toast.textContent='New game started.';return}start.disabled=true;start.textContent='Loading…';$('loadingScreen').hidden=false;$('loadingText').textContent='Connecting to WebLLM and preparing the selected model.';$('progressFill').style.width='0%';$('progressLabel').textContent='Starting';$('progressPercent').textContent='0%';$('loadingDetail').textContent='The first load can take several minutes depending on your connection.';
-      try{if(engine){await engine.unload();engine=null;activeModel=null;turns=[]}const webllm=await import('https://esm.run/@mlc-ai/web-llm');engine=await webllm.CreateMLCEngine(model,{initProgressCallback:report=>{const raw=Number(report?.progress);const percent=Number.isFinite(raw)?Math.max(0,Math.min(100,Math.round(raw*100))):0;const detail=report?.text||'Downloading and initializing model';$('progressFill').style.width=`${percent}%`;$('progressPercent').textContent=`${percent}%`;$('progressLabel').textContent=percent>=100?'Almost ready':'Model loading';$('loadingText').textContent=detail;$('loadingDetail').textContent=detail}});activeModel=model;turns=[];await say($('characterName').value.trim()||'Mira',starter);$('progressFill').style.width='100%';$('progressPercent').textContent='100%';$('progressLabel').textContent='Ready';$('loadingText').textContent='Your story is ready.';await new Promise(resolve=>setTimeout(resolve,350));$('loadingScreen').hidden=true;$('mainMenu').hidden=true;setStatus('WebLLM connected · running in your browser');toast.textContent='Ready! Say hello to Mira.'}
-      catch(err){console.error(err);engine=null;activeModel=null;$('loadingScreen').hidden=true;$('menuError').textContent='Could not load this model. Check WebGPU support and your connection, then try again.';setStatus('Could not connect · select a model to retry','error')}
-      finally{start.disabled=false;start.textContent='Load model & start'}});
+    
+    $('restartBtn').addEventListener('click',()=>{turns=[];say($('characterName').value.trim()||'VESPER',starter);toast.textContent='Conversation restarted.';setTimeout(()=>toast.textContent='',2400)});
+    function showMenuHome() {
+  $('resumeBtn').disabled = !gameStarted;
+  if (engine) $('resumeHint').textContent = gameStarted ? 'A story is ready to continue' : 'Model ready';
+}
+
+$('mainMenuBtn').addEventListener('click', () => {
+  $('menuError').textContent = '';
+  showMenuHome();
+  $('mainMenu').hidden = false;
+});
+
+$('newGameBtn').addEventListener('click', async () => {
+  $('menuError').textContent = '';
+  // Retry path if the first attempt failed
+  if (!engine && !preloadPromise) {
+    $('newGameBtn').disabled = true;
+    preloadModel().then(onModelReady).catch(onModelFailed);
+    return;
+  }
+  // If still downloading, show the full loading screen until it finishes
+  if (!engine) {
+    $('loadingScreen').hidden = false;
+    try { await preloadPromise; } catch { $('loadingScreen').hidden = true; return; }
+    $('loadingScreen').hidden = true;
+  }
+  turns = [];
+  gameStarted = true;
+  await say($('characterName').value.trim() || 'VESPER', starter);
+  $('mainMenu').hidden = true;
+  toast.textContent = 'New game started.';
+  setTimeout(() => toast.textContent = '', 2400);
+});
+
+$('resumeBtn').addEventListener('click', () => {
+  if (!gameStarted) return;
+  $('mainMenu').hidden = true;
+});
   </script>
 </body>
 </html>
