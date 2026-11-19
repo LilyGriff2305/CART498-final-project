@@ -139,3 +139,129 @@ $('resumeBtn').addEventListener('click', () => {
   if (!gameStarted) return;
   $('mainMenu').hidden = true;
 });
+
+// ===== Run logging → Google Form (one row per run) =====
+const LOG_DB = 'vesper-chat-log', RUN_STORE = 'runs';
+const FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse';
+const FORM_FIELDS = {          // key in the run : entry ID from your pre-filled link
+  runId:       'entry.1111111111',
+  started:     'entry.2222222222',
+  model:       'entry.3333333333',
+  temperature: 'entry.4444444444',
+  topP:        'entry.5555555555',
+  outcome:     'entry.6666666666',
+  turns:       'entry.7777777777',
+  transcript:  'entry.8888888888'
+};
+const CONSENT_KEY = 'vesperLogConsent';
+const MAX_TURNS = 12;                                   // set to 0 for no turn limit
+const WIN_PHRASE = /airlock cycling\.\s*welcome aboard\./i;
+const TRANSCRIPT_LIMIT = 45000;                         // Sheets cells hold about 50,000 characters
+let currentRun = null, flushing = false;
+
+function logConsent() { try { return localStorage.getItem(CONSENT_KEY) === '1'; } catch { return false; } }
+function setLogConsent(v) { try { localStorage.setItem(CONSENT_KEY, v ? '1' : '0'); } catch {} }
+function newId() { return crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function currentParams() { return { temperature: Number($('temperature').value), topP: Number($('topP').value) }; }
+const oneLine = s => String(s ?? '').replace(/\s+/g, ' ').trim();
+
+function openLogDb() {
+  return new Promise((resolve, reject) => {
+    const r = indexedDB.open(LOG_DB, 3);   // version 3: drops the older stores, adds 'runs'
+    r.onupgradeneeded = () => {
+      const db = r.result;
+      for (const name of Array.from(db.objectStoreNames)) db.deleteObjectStore(name);
+      db.createObjectStore(RUN_STORE, { keyPath: 'runId' });
+    };
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+}
+function runStore(mode, fn) {
+  return openLogDb().then(db => new Promise((resolve, reject) => {
+    const t = db.transaction(RUN_STORE, mode);
+    const req = fn(t.objectStore(RUN_STORE));
+    t.oncomplete = () => { db.close(); resolve(req ? req.result : undefined); };
+    t.onerror = t.onabort = () => { db.close(); reject(t.error); };
+  }));
+}
+const putRun = r => runStore('readwrite', s => s.put(r));
+const allRuns = () => runStore('readonly', s => s.getAll());
+const deleteRun = id => runStore('readwrite', s => s.delete(id));
+const clearRuns = () => runStore('readwrite', s => s.clear());
+
+function startRun() {
+  currentRun = { runId: newId(), started: new Date().toISOString(), model: activeModel || 'Demo mode',
+    temperature: null, topP: null, outcome: 'in_progress', turns: 0, final: false, lines: [] };
+}
+
+// Add one exchange to the current run and save the run locally (only if the player consented).
+async function logTurn(x) {
+  const r = currentRun; if (!r) return;
+  r.turns++;
+  r.model = activeModel || 'Demo mode';
+  const t = x.temperature.toFixed(1), p = x.topP.toFixed(2);
+  if (r.temperature === null) { r.temperature = t; r.topP = p; }
+  else { if (r.temperature !== t) r.temperature = 'varied'; if (r.topP !== p) r.topP = 'varied'; }
+  r.lines.push(`${r.turns} | PLAYER: ${oneLine(x.player)} | VESPER (${x.expression}): ${oneLine(x.vesper)} | T${t} P${p}`);
+  if (logConsent()) { try { await putRun(r); } catch (err) { console.warn('Could not save the run locally.', err); } }
+}
+
+// End the current run (won / lost / restarted), queue it, and send it.
+async function finalizeRun(outcome) {
+  const r = currentRun; currentRun = null;
+  if (!r || !r.turns) return;                           // nothing to send
+  r.outcome = outcome; r.final = true; r.ended = new Date().toISOString();
+  if (!logConsent()) return;
+  try { await putRun(r); } catch (err) { console.warn(err); }
+  flushLog();
+}
+
+async function sendRun(r) {
+  let transcript = r.lines.join('\n');
+  if (transcript.length > TRANSCRIPT_LIMIT) transcript = transcript.slice(0, TRANSCRIPT_LIMIT) + '\n[transcript truncated]';
+  const body = new URLSearchParams();
+  const row = { ...r, transcript };
+  for (const [key, field] of Object.entries(FORM_FIELDS)) body.set(field, String(row[key] ?? ''));
+  // no-cors: the request goes out, but the browser hides Google's response (errors are invisible here)
+  await fetch(FORM_URL, { method: 'POST', mode: 'no-cors', keepalive: true,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+}
+async function flushLog() {
+  if (flushing || !logConsent()) return;
+  flushing = true;
+  try {
+    for (const r of await allRuns()) {
+      if (!r.final) continue;
+      await sendRun(r);
+      await deleteRun(r.runId);
+    }
+  } catch (err) { console.warn('Run log send failed; it will retry later.', err); }
+  finally { flushing = false; }
+}
+// Runs left unfinished by a closed tab become "abandoned" on the next visit.
+async function recoverOrphans() {
+  if (!logConsent()) return;
+  try {
+    for (const r of await allRuns()) {
+      if (r.final || r.runId === currentRun?.runId) continue;
+      r.outcome = 'abandoned'; r.final = true;
+      await putRun(r);
+    }
+    await flushLog();
+  } catch (err) { console.warn(err); }
+}
+
+const consentBox = $('logConsent');
+consentBox.checked = logConsent();
+consentBox.addEventListener('change', async () => {
+  setLogConsent(consentBox.checked);
+  if (consentBox.checked) {
+    if (currentRun?.turns) { try { await putRun(currentRun); } catch {} }
+    recoverOrphans();
+  } else {
+    clearRuns().catch(() => {});                        // withdrawing consent discards everything unsent
+  }
+});
+addEventListener('online', flushLog);
+recoverOrphans();

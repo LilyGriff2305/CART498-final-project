@@ -26,6 +26,8 @@
     font:inherit;
     color:inherit
   }
+  .consent{display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;font-size:12px;line-height:1.5;color:#e0cbdb;cursor:pointer}
+  .consent input{margin-top:3px;accent-color:#f1a3c4}
   .game {
     position:relative;
     width:100%;
