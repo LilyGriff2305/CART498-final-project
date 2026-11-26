@@ -51,6 +51,8 @@
     background:transparent;
     border-bottom:0
   }
+  .oxygen{font:600 14px 'Orbitron',sans-serif;letter-spacing:.1em;color:#8eefff;padding:8px 14px;border:1px solid #73eaff66;border-radius:8px;background:#06121c99}
+  .oxygen.low{color:#ff8a8a;border-color:#ff8a8a88;animation:blink 1s steps(2) infinite}
   .brand {
     display:flex;
     gap:11px;

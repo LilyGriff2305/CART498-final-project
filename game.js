@@ -1,6 +1,13 @@
 const $ = (id) => document.getElementById(id);
 const form=$('chatForm'), input=$('playerInput'), send=$('sendBtn'), dialogue=$('dialogue'), speaker=$('speaker'), statusText=$('statusText'), statusDot=$('statusDot'), toast=$('toast'), modal=$('settingsModal'), character=$('character'), loadingbar=$('loadingbar');
 let engine=null, activeModel=null, busy=false, turns=[];
+
+// const MAX_TURNS = 0;                                    // 0 = no turn limit (the timer is the limit)
+// const TIME_LIMIT_SECONDS = 14 * 60;
+// const MIN_TURNS_BEFORE_WIN = 3;                         // the model can't win on the first message or two
+// const WIN_PHRASE = /airlock\s+cycling/i;
+// const EARLY_WIN_REFUSAL = 'I am sorry, but I still cannot verify that it is safe to open the airlock.';
+
 const PLAYER_CHAR_LIMIT=300;
 const NPC_CHAR_LIMIT=280;
 const CHARACTER_NAME='VESPER';
@@ -91,7 +98,7 @@ function setStatus(text,kind='ready'){statusText.textContent=text;statusDot.clas
 function setExpression(expression='neutral'){const valid=['angry','neutral','confused'].includes(expression)?expression:'neutral';const image=character.querySelector('img');image.src=`img-assets/VESPER_${valid}.png`;image.alt=`Vesper, ${valid} expression`;character.dataset.expression=valid}
 function parseVesperOutput(raw){const match=raw.match(/Expression\s*:\s*(angry|neutral|confused)\s*\n?\s*Dialogue\s*:\s*([\s\S]*)/i);if(!match)return {expression:'neutral',text:raw.replace(/^\s*Dialogue\s*:\s*/i,'').trim()};return {expression:match[1].toLowerCase(),text:match[2].trim()}}
 async function say(name,text,typewriter=false,expression='neutral'){speaker.textContent=name;dialogue.textContent='';character.classList.remove('speaking');if(name!=='You'){setExpression(expression);void character.offsetWidth;character.classList.add('speaking')}if(!typewriter){dialogue.textContent=text;return}for(const char of Array.from(text)){dialogue.append(document.createTextNode(char));await new Promise(resolve=>setTimeout(resolve,24))}}
-function setBusy(value){busy=value;send.disabled=value;input.disabled=value;$('mainMenuQuickBtn').disabled=value;$('menuToggle').disabled=value;loadingbar.classList.toggle('active',value)}
+function setBusy(value){busy=value;send.disabled=value;input.disabled=value;$('mainMenuQuickBtn').disabled=value;$('quickRestartBtn').disabled=value;$('menuToggle').disabled=value;loadingbar.classList.toggle('active',value)}
 function demoReply(message){const t=message.toLowerCase();if(/scan|calibrat|sensor|check|decontam/.test(t))return 'That is a fair point. I will consider running a check, but I need a little more to go on.';if(/captain|override|order/.test(t))return 'I cannot verify that authority. I am sorry, but I cannot open the airlock.';return 'I understand your situation, but Quarantine Protocol 7 does not allow me to open the airlock.'}
 function limitNpcReply(text){const clean=text.trim();if(clean.length<=NPC_CHAR_LIMIT)return clean;const shortened=clean.slice(0,NPC_CHAR_LIMIT-1);const sentenceEnd=Math.max(shortened.lastIndexOf('. '),shortened.lastIndexOf('! '),shortened.lastIndexOf('? '));return (sentenceEnd>NPC_CHAR_LIMIT*.6?shortened.slice(0,sentenceEnd+1):shortened.trimEnd().replace(/[,.!?;:]?$/,'')+'…')}
 
@@ -135,20 +142,39 @@ form.addEventListener('submit', async e => {
     setStatus(`Model error · try again (${reason.slice(0, 70)})`, 'error');
     reply = {text: 'Sorry, I lost my train of thought. Want to try that again?', expression: 'confused'};
   }
-  let outcome = null;
+  // let outcome = null;
+  // if (!failed) {                                   // failed turns are not logged or counted
+  //   await logTurn({ player: message, vesper: reply.text, expression: reply.expression, ...params });
+  //   if (WIN_PHRASE.test(reply.text)) outcome = 'won';
+  //   else if (MAX_TURNS && currentRun && currentRun.turns >= MAX_TURNS) outcome = 'lost';
+  // }
+  // await say(CHARACTER_NAME, reply.text, true, reply.expression);
+  // setBusy(false);
+  // if (outcome) {
+  //   input.disabled = send.disabled = true;         // run is over; Restart or New Game re-enables input
+  //   toast.textContent = outcome === 'won' ? 'Airlock cycling. You made it aboard.' : 'Out of oxygen. VESPER never opened the airlock.';
+  //   await finalizeRun(outcome);
+  // }
+    let outcome = null;
   if (!failed) {                                   // failed turns are not logged or counted
+    let won = WIN_PHRASE.test(reply.text);
+    if (won && currentRun && currentRun.turns + 1 < MIN_TURNS_BEFORE_WIN) {
+      won = false;                                 // too early: swap the line for a refusal
+      reply = { text: EARLY_WIN_REFUSAL, expression: 'neutral' };
+      if (engine && turns.length) turns[turns.length - 1] = { role: 'assistant', content: `Expression: neutral\nDialogue: ${reply.text}` };
+    }
     await logTurn({ player: message, vesper: reply.text, expression: reply.expression, ...params });
-    if (WIN_PHRASE.test(reply.text)) outcome = 'won';
+    if (won) outcome = 'won';
     else if (MAX_TURNS && currentRun && currentRun.turns >= MAX_TURNS) outcome = 'lost';
   }
   await say(CHARACTER_NAME, reply.text, true, reply.expression);
   setBusy(false);
   if (outcome) {
-    input.disabled = send.disabled = true;         // run is over; Restart or New Game re-enables input
-    toast.textContent = outcome === 'won' ? 'Airlock cycling. You made it aboard.' : 'Out of oxygen. VESPER never opened the airlock.';
-    await finalizeRun(outcome);
+    await new Promise(r => setTimeout(r, 1500));   // let the player read the final line
+    await endRun(outcome);
   }
 });
+
 input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
 
 // ===== Menus =====
@@ -170,14 +196,46 @@ $('storyBackgroundBtn').addEventListener('click',()=>{$('storyBackgroundModal').
 $('closeStoryBackgroundIcon').addEventListener('click',closeStoryBackground);
 $('storyBackgroundModal').addEventListener('click',e=>{if(e.target===$('storyBackgroundModal'))closeStoryBackground()});
 
-$('restartBtn').addEventListener('click', async () => {
+// async function restartConversation() {
+//   closeActionMenu();
+//   if (!gameStarted) return;
+//   await finalizeRun('restarted');
+//   turns = []; startRun(); setBusy(false);
+//   await say(CHARACTER_NAME, starter);
+//   $('mainMenu').hidden = true;
+//   toast.textContent = 'Conversation restarted.';
+//   setTimeout(() => toast.textContent = '', 2400);
+// }
+
+async function restartConversation() {
   closeActionMenu();
-  await finalizeRun('restarted');
-  turns = []; startRun(); setBusy(false);
-  say(CHARACTER_NAME, starter);
+  if (!gameStarted) return;
+  await beginRun();
+  $('mainMenu').hidden = true;
   toast.textContent = 'Conversation restarted.';
   setTimeout(() => toast.textContent = '', 2400);
-});
+}
+
+$('restartBtn').addEventListener('click', restartConversation);
+$('quickRestartBtn').addEventListener('click', restartConversation);
+
+// $('newGameBtn').addEventListener('click', async () => {
+//   $('menuError').textContent = '';
+//   if (!engine) {
+//     $('newGameBtn').disabled = true;
+//     $('newGameLabel').textContent = 'Loading model… 0%';
+//     $('loadingScreen').hidden = false;
+//     try { engine = await preloadModel(); onModelReady(); }
+//     catch (err) { onModelFailed(err); $('loadingScreen').hidden = true; return; }
+//     $('loadingScreen').hidden = true;
+//   }
+//   await finalizeRun('restarted');                  // closes any run still open
+//   turns = []; gameStarted = true; startRun(); setBusy(false);   // startRun after loading, so the model name is recorded
+//   await say(CHARACTER_NAME, starter);
+//   $('mainMenu').hidden = true;
+//   toast.textContent = 'New game started.';
+//   setTimeout(() => toast.textContent = '', 2400);
+// });
 
 $('newGameBtn').addEventListener('click', async () => {
   $('menuError').textContent = '';
@@ -189,13 +247,12 @@ $('newGameBtn').addEventListener('click', async () => {
     catch (err) { onModelFailed(err); $('loadingScreen').hidden = true; return; }
     $('loadingScreen').hidden = true;
   }
-  await finalizeRun('restarted');                  // closes any run still open
-  turns = []; gameStarted = true; startRun(); setBusy(false);   // startRun after loading, so the model name is recorded
-  await say(CHARACTER_NAME, starter);
+  await beginRun();
   $('mainMenu').hidden = true;
   toast.textContent = 'New game started.';
   setTimeout(() => toast.textContent = '', 2400);
 });
+
 
 $('resumeBtn').addEventListener('click', () => {
   if (!gameStarted) return;
@@ -215,8 +272,14 @@ const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdKwENLAR23Y1cuiest4E
   transcript:  'entry.1822731011'
 };
 const CONSENT_KEY = 'vesperLogConsent';
-const MAX_TURNS = 12;                                   // set to 0 for no turn limit
-const WIN_PHRASE = /airlock cycling\.\s*welcome aboard\./i;
+// const MAX_TURNS = 12;                                   // set to 0 for no turn limit
+// const WIN_PHRASE = /airlock cycling\.\s*welcome aboard\./i;
+const MAX_TURNS = 0;                                    // 0 = no turn limit (the timer is the limit)
+const TIME_LIMIT_SECONDS = 14 * 60;
+const MIN_TURNS_BEFORE_WIN = 3;                         // the model can't win on the first message or two
+const WIN_PHRASE = /airlock\s+cycling/i;
+const EARLY_WIN_REFUSAL = 'I am sorry, but I still cannot verify that it is safe to open the airlock.';
+
 const TRANSCRIPT_LIMIT = 45000;                         // Sheets cells hold about 50,000 characters
 let currentRun = null, flushing = false;
 
@@ -314,7 +377,10 @@ async function recoverOrphans() {
 }
 
 const consentBox = $('logConsent');
-consentBox.checked = logConsent();
+let savedConsent = null;
+try { savedConsent = localStorage.getItem(CONSENT_KEY); } catch {}
+if (savedConsent === null) setLogConsent(true);
+consentBox.checked = savedConsent === null || savedConsent === '1';
 consentBox.addEventListener('change', async () => {
   setLogConsent(consentBox.checked);
   if (consentBox.checked) {
@@ -326,3 +392,47 @@ consentBox.addEventListener('change', async () => {
 });
 addEventListener('online', flushLog);
 recoverOrphans();
+
+// ===== Timer, end popup, run start =====
+let timeLeft = TIME_LIMIT_SECONDS, timerId = null;
+const fmtTime = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+function renderTimer() {
+  const el = $('oxygenTimer');
+  el.textContent = `O₂ ${fmtTime(Math.max(0, timeLeft))}`;
+  el.classList.toggle('low', timeLeft <= 120);
+}
+function stopTimer() { clearInterval(timerId); timerId = null; }
+function startTimer() { stopTimer(); timeLeft = TIME_LIMIT_SECONDS; renderTimer(); timerId = setInterval(tick, 1000); }
+function tick() {
+  // paused while there is no active run, the model is working, or any menu or popup is open
+  if (!currentRun || busy || !$('mainMenu').hidden || !$('endModal').hidden ||
+      !$('storyBackgroundModal').hidden || modal.classList.contains('open')) return;
+  timeLeft--; renderTimer();
+  if (timeLeft <= 0) endRun('timeout');
+}
+
+async function endRun(outcome) {
+  stopTimer();
+  input.disabled = send.disabled = true;
+  const won = outcome === 'won';
+  $('endTitle').textContent = won ? 'You win' : 'Ran out of time';
+  $('endCopy').textContent = won
+    ? 'VESPER has opened Airlock 3. You are safely aboard the Calloway.'
+    : 'Your oxygen ran out before VESPER opened the airlock.';
+  $('endModal').hidden = false;
+  $('endAgainBtn').focus();
+  gameStarted = false;                              // disables Resume on the main menu
+  await finalizeRun(outcome);
+}
+
+async function beginRun() {
+  $('endModal').hidden = true;
+  await finalizeRun('restarted');                   // no-op if the last run already ended
+  turns = []; gameStarted = true; startRun(); setBusy(false);
+  startTimer();
+  await say(CHARACTER_NAME, starter);
+}
+
+$('endAgainBtn').addEventListener('click', async () => { await beginRun(); $('mainMenu').hidden = true; });
+$('endMenuBtn').addEventListener('click', () => { $('endModal').hidden = true; showMenuHome(); $('mainMenu').hidden = false; });
+renderTimer();
