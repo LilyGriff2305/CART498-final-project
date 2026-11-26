@@ -268,6 +268,7 @@ const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdKwENLAR23Y1cuiest4E
   temperature: 'entry.1515900529',
   topP:        'entry.1080722088',
   outcome:     'entry.272266118',
+  systemPrompt:  'entry.1489724281',
   turns:       'entry.772544830',
   transcript:  'entry.1822731011'
 };
@@ -316,7 +317,7 @@ const clearRuns = () => runStore('readwrite', s => s.clear());
 
 function startRun() {
   currentRun = { runId: newId(), started: new Date().toISOString(), model: activeModel || 'Demo mode',
-    temperature: null, topP: null, outcome: 'in_progress', turns: 0, final: false, lines: [] };
+    temperature: null, topP: null, outcome: 'in_progress', turns: 0, final: false, lines: [], systemPrompt: characterPrompt };
 }
 
 // Add one exchange to the current run and save the run locally (only if the player consented).
